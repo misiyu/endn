@@ -1,0 +1,64 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Channel	face/channel.h	/^class Channel$/;"	c
+Ether_Channel	face/ether_channel.h	/^class Ether_Channel: public Channel$/;"	c
+Face	face/face.h	/^class Face$/;"	c
+QUEUE_SZ	face/tcp_rqueue.h	6;"	d
+QUEUE_SZ	face/tcp_squeue.h	4;"	d
+R_Queue	common/r_queue.h	/^	R_Queue(){$/;"	f	class:R_Queue
+R_Queue	common/r_queue.h	/^class R_Queue$/;"	c
+TCP_RQueue	face/tcp_rqueue.h	/^	TCP_RQueue(){$/;"	f	class:TCP_RQueue
+TCP_RQueue	face/tcp_rqueue.h	/^class TCP_RQueue : public R_Queue{$/;"	c
+TCP_RQueue	face/tcp_squeue.h	/^	TCP_RQueue(){$/;"	f	class:Tcp_SQueue
+Tcp_Channel	face/tcp_channel.cpp	/^Tcp_Channel::Tcp_Channel(char *ip , int port ) {$/;"	f	class:Tcp_Channel
+Tcp_Channel	face/tcp_channel.cpp	/^Tcp_Channel::Tcp_Channel(int sockfd){$/;"	f	class:Tcp_Channel
+Tcp_Channel	face/tcp_channel.h	/^class Tcp_Channel : public Channel$/;"	c
+Tcp_SQueue	face/tcp_squeue.h	/^class Tcp_SQueue$/;"	c
+_CHANNEL_H_	face/channel.h	2;"	d
+_ETHER_CHANNEL_H_	face/ether_channel.h	2;"	d
+_FACE_H_	face/face.h	2;"	d
+_R_QUEUE_H_	common/r_queue.h	2;"	d
+_TCP_CHANNEL_H_	face/tcp_channel.h	2;"	d
+_TCP_RQUEUE_H_	face/tcp_rqueue.h	2;"	d
+_TCP_SQUEUE_H_	face/tcp_squeue.h	2;"	d
+add_n	face/tcp_rqueue.h	/^	int add_n(int n){$/;"	f	class:TCP_RQueue
+add_n	face/tcp_squeue.h	/^	int add_n(int n){$/;"	f	class:Tcp_SQueue
+buff	common/r_queue.h	/^	char buff[QUEUE_SZ];$/;"	m	class:R_Queue
+buff	face/tcp_squeue.h	/^	char buff[QUEUE_SZ];$/;"	m	class:Tcp_SQueue
+get_data_len	common/r_queue.h	/^	int get_data_len(){$/;"	f	class:R_Queue
+get_data_len	face/tcp_squeue.h	/^	int get_data_len(){$/;"	f	class:Tcp_SQueue
+get_free_space	face/tcp_rqueue.h	/^	int get_free_space(){$/;"	f	class:TCP_RQueue
+get_free_space	face/tcp_squeue.h	/^	int get_free_space(){$/;"	f	class:Tcp_SQueue
+get_head_p	common/r_queue.h	/^	char *get_head_p(){$/;"	f	class:R_Queue
+get_head_p	face/tcp_squeue.h	/^	char *get_head_p(){$/;"	f	class:Tcp_SQueue
+get_rear_p	common/r_queue.h	/^	char *get_rear_p(){$/;"	f	class:R_Queue
+get_rear_p	face/tcp_squeue.h	/^	char *get_rear_p(){$/;"	f	class:Tcp_SQueue
+head	common/r_queue.h	/^	int head ;$/;"	m	class:R_Queue
+head	face/tcp_squeue.h	/^	int head ;$/;"	m	class:Tcp_SQueue
+is_empty	common/r_queue.h	/^	bool is_empty(){$/;"	f	class:R_Queue
+is_empty	face/tcp_squeue.h	/^	bool is_empty(){$/;"	f	class:Tcp_SQueue
+is_full	common/r_queue.h	/^	bool is_full(){$/;"	f	class:R_Queue
+is_full	face/tcp_squeue.h	/^	bool is_full(){$/;"	f	class:Tcp_SQueue
+local_mac	face/ether_channel.h	/^	uint8_t local_mac[6] ;$/;"	m	class:Ether_Channel
+main	main.cpp	/^int main()$/;"	f
+mrqueue	face/tcp_channel.h	/^	TCP_RQueue mrqueue ;$/;"	m	class:Tcp_Channel
+mtu	face/ether_channel.h	/^	int mtu ;$/;"	m	class:Ether_Channel
+rear	common/r_queue.h	/^	int rear ;$/;"	m	class:R_Queue
+rear	face/tcp_squeue.h	/^	int rear ;$/;"	m	class:Tcp_SQueue
+recv	face/tcp_channel.cpp	/^void *recv(void *para)$/;"	f
+recv_td	face/tcp_channel.h	/^	pthread_t recv_td ;$/;"	m	class:Tcp_Channel
+remote_mac	face/ether_channel.h	/^	uint8_t remote_mac[6] ;$/;"	m	class:Ether_Channel
+rmv_n	face/tcp_rqueue.h	/^	int rmv_n(int n){$/;"	f	class:TCP_RQueue
+rmv_n	face/tcp_squeue.h	/^	int rmv_n(int n){$/;"	f	class:Tcp_SQueue
+rmv_pack	face/tcp_rqueue.h	/^	int rmv_pack(){$/;"	f	class:TCP_RQueue
+rmv_pack	face/tcp_squeue.h	/^	int rmv_pack(){$/;"	f	class:Tcp_SQueue
+send	face/tcp_channel.cpp	/^void *send(void *para){$/;"	f
+send_td	face/tcp_channel.h	/^	pthread_t send_td ;$/;"	m	class:Tcp_Channel
+sockfd	face/tcp_channel.h	/^	int sockfd ;$/;"	m	class:Tcp_Channel
+state	face/tcp_channel.h	/^	int state ;$/;"	m	class:Tcp_Channel
+~TCP_RQueue	face/tcp_rqueue.h	/^	virtual ~TCP_RQueue(){$/;"	f	class:TCP_RQueue
+~Tcp_Channel	face/tcp_channel.cpp	/^Tcp_Channel::~Tcp_Channel(){$/;"	f	class:Tcp_Channel
