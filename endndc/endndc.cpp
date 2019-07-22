@@ -12,9 +12,16 @@ int send_cmd(string cmd){
 	close(fd) ;
 }
 
-int main()
+
+int main(int argc , char **argv)
 {
 	cout <<"Hello world!" << endl;
+	if(argc < 2){
+		cout << "Usage : ./endndc route " << endl ;
+		cout << "Usage : ./endndc face " << endl ;
+		cout << "./endndc -h for more detail help" << endl ;
+		exit(1) ;
+	}
 
 	return 0;
 }

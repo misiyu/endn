@@ -6,7 +6,8 @@ OBJ_DIR = ./objs
 
 SRC=  main.cpp ./deamon/endn_deamon.cpp ./face/face.cpp  \
 	  ./deamon/tcp_server.cpp ./deamon/flist.cpp ./face/tcp_channel.cpp \
-	  ./table/pit.cpp ./table/pit_map.cpp ./table/fib.cpp ./table/fib_map.cpp
+	  ./table/pit.cpp ./table/pit_map.cpp ./table/fib.cpp ./table/fib_map.cpp \
+	  ./deamon/usocket_server.cpp ./common/globle_var.cpp ./common/r_queue.cpp
 
 OBJS := $(patsubst %.cpp, %.o,$(SRC))
 
@@ -21,13 +22,17 @@ endndc : ./endndc/endndc.cpp
 	g++ ./endndc/endndc.cpp -o ./endndc/endndc
 
 $(TARGET): ${OBJS}
-	#$(CC) ${OBJS} -o ${TARGET}  $(LFLAGS)
+	$(CC) ${OBJS} -o ${TARGET}  $(LFLAGS)
 
-${OBJS} : ./%.cpp
-	@#${CC} ${CFLAGS} -c $< -o $@
-	@#echo $(patsubst %.o, %.cpp, $@ )
-	@echo $<
+${OBJS} : %.o: %.cpp %.h
+	${CC} ${CFLAGS} -c $< -o $@
+	@#echo $^
 
+
+#$@  表示目标文件
+#$^  表示所有依赖文件
+#$<  表示第一个依赖文件
+#$?  表示比目标新的依赖文件列表
 
 clean:  
 	rm -rf $(TARGET) *.o ${OBJS} endndc/endndc

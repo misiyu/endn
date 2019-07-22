@@ -3,11 +3,10 @@
 
 using namespace std;
 
-Tcp_Server::Tcp_Server(FList *mflist){
-	this->mflist = mflist ;
+Tcp_Server::Tcp_Server(){
+	m_flist = FList::GetInstance() ;
 }
 Tcp_Server::~Tcp_Server(){
-
 }
 void Tcp_Server::start(){
 	printf("start tcp server ... \n") ;
@@ -43,7 +42,7 @@ void* Tcp_Server::run(void *param){
 				&cli_addr_len);
 		cout << "new tcp socket accept " << new_sockfd << endl ;
 		char *cip = inet_ntoa(cli_addr.sin_addr) ;
-		while(_this->mflist->s_add_tcp_face(cip ,new_sockfd) == -1 ){
+		while(_this->m_flist->s_add_tcp_face(cip ,new_sockfd) == -1 ){
 			sleep(1) ;
 		}
 		

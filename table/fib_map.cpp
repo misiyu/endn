@@ -1,6 +1,9 @@
 #include <iostream>
 #include "fib_map.h"
 
+using std::cout ;
+using std::endl ;
+
 Fib_Map::Fib_Map(){
 
 }
@@ -8,9 +11,9 @@ Fib_Map::~Fib_Map(){
 
 }
 
-void Fib_Map::add(char *name , int face_id){
+void Fib_Map::add(const char *name , int face_id){
 	uint16_t name_len = *((uint16_t*)(name+1));
-	string name_str(name+3,name_len);
+	string name_str(name,name_len+3);
 	map<string, struct fib_map_vt*>::iterator it = fib_map.find(name_str);
 	if(it == fib_map.end()){
 		// not existed
@@ -22,26 +25,53 @@ void Fib_Map::add(char *name , int face_id){
 }
 
 // 递归查找，实现最长前缀匹配
-map<string, struct fib_map_vt*>::iterator Fib_Map::recur_search(char *name ,
+map<string, struct fib_map_vt*>::iterator Fib_Map::recur_search(const char *name ,
 		int s_len , int len){
-	uint16_t component_len = *((uint16_t*)(name+1));
+	uint16_t component_len = *((uint16_t*)(name+s_len+1));
 	s_len += (component_len+3) ;
 	if( s_len < len){
-		map<string, struct fib_map_vt*>::iterator it = recur_search(name,s_len
-				,len);
+		map<string, struct fib_map_vt*>::iterator it = recur_search(
+				name, s_len ,len);
 		if(it != fib_map.end()) return it ;
+
+		*((uint16_t*)(name+1)) = s_len-3 ;
 		string name_str(name,s_len) ;
+		cout << "target = " << name_str << endl ;
+		for (int i = 0; i < s_len; i++) {
+			printf("%x ",name[i]) ;
+		}
+		printf("\n") ;
 		return fib_map.find(name_str) ;
 	}else{
 		string name_str(name,s_len) ;
+		cout << "target = " << name_str << endl ;
+		for (int i = 0; i < s_len; i++) {
+			printf("%x ",name[i]) ;
+		}
+		printf("\n") ;
 		return fib_map.find(name_str) ;
 	}
 }
 
-vector<int> Fib_Map::search(char *name) {
+vector<int> Fib_Map::search(const char *name) {
 	uint16_t name_len = *((uint16_t*)(name+1));
-	map<string, struct fib_map_vt*>::iterator it = recur_search(name+3,0 ,
-			name_len) ;
+	
+	cout << "target " << endl ;
+	string target(name,name_len+3) ;
+	cout << "target = " << target << endl ;
+	cout << "table = "  << endl ;
+	map<string,struct fib_map_vt*>::iterator it1 = fib_map.begin() ;
+	for( ; it1 != fib_map.end() ; it1 ++ ){
+		cout << it1->first << endl ;
+		uint16_t n_len = *(uint16_t*)(it1->first.data()+1) + 3 ;
+		for (int i = 0; i < n_len; i++) {
+			printf("%x ",it1->first[i]) ;
+		}
+		printf("\n") ;
+	}
+
+	map<string, struct fib_map_vt*>::iterator it = recur_search(name,3 ,
+			name_len+3) ;
 	if(it == fib_map.end()){
 		// not existed
 		vector<int> result ;
@@ -52,7 +82,7 @@ vector<int> Fib_Map::search(char *name) {
 	
 }
 
-void Fib_Map::remove(char *name){
+void Fib_Map::remove(const char *name){
 	uint16_t name_len = *((uint16_t*)(name+1));
 	string name_str(name+3,name_len);
 	fib_map.erase(name_str) ;

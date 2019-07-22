@@ -31,17 +31,16 @@ public:
 	Fib_Map();
 	~Fib_Map();
 
-private:
 	// param :
 	// name : TLV format [T:1|L:2|V]  V ::= [T:1|L:2|v]
-	void add(char *name , int face_id) ;
+	void add(const char *name , int face_id) ;
 	
 	// ret:
 	//		face list 
-	vector<int> search(char *name ) ;
+	vector<int> search(const char *name ) ;
 
-	void remove(char *name) ;
-	map<string, struct fib_map_vt*>::iterator recur_search(char *name ,
+	void remove(const char *name) ;
+	map<string, struct fib_map_vt*>::iterator recur_search(const char *name ,
 		int s_len , int len);
 
 private:

@@ -2,13 +2,24 @@
 #include "endn_deamon.h"
 using namespace std;
 
-
 Endn_Deamon::Endn_Deamon(){
-	void_gflist = new FList();
+	m_fib = FIB::GetInstance() ;
+	m_pit = PIT::GetInstance() ;
+	this->mclock = 0 ;
 }
 
 void Endn_Deamon::start(){
 	//gflist.start() ;
+	mtcp_server.start();
+	musk_server.start() ;
+	recv_cmd() ;
+}
+
+// 更新一些对象的状态。FIB、PIT、FList 等 
+void Endn_Deamon::update(){
+	mclock ++ ;
+	if(mclock % 5 == 0 ) m_fib->update();
+	m_pit->update();
 }
 
 Endn_Deamon::~Endn_Deamon(){
@@ -25,12 +36,13 @@ void Endn_Deamon::recv_cmd(){
 		printf("create named pipe failed\n");
 	}
 
-	//fd = open(P_FIFO , O_RDONLY | O_NONBLOCK) ;
+	fd = open(P_FIFO , O_RDONLY | O_NONBLOCK) ;
 	while(1){
 		memset(cache , 0 , sizeof(cache)) ;
 		read(fd,cache,100) ;
-		printf("get data %s \n",cache) ;
+		//printf("get cmd %s \n",cache) ;
 		sleep(1);
+		this->update() ; // 一些对象的状态
 	}
 	close(fd) ;
 }

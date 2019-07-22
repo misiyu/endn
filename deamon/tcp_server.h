@@ -8,7 +8,7 @@
 class Tcp_Server
 {
 public:
-	Tcp_Server(FList *mflist);
+	Tcp_Server();
 	~Tcp_Server();
 	void start();
 	void stop();
@@ -17,8 +17,8 @@ public:
 
 private:
 	/* data */
-	FList *mflist;
 	pthread_t mtid ;
+	FList *m_flist ;
 };
 
 #endif 

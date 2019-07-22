@@ -8,10 +8,9 @@
 
 #define MAX_NAME_LEN 8000
 
-static FIB gfib ;
-static PIT gpit ;
-//extern void *void_gflist ;  
-static void *void_gflist ;  
+//FIB gfib ;
+//PIT gpit ;
+extern void *void_gflist ;  
 // this point will point to a FList object defined beblow some where
 
 #define gflist ((FList*)void_gflist)

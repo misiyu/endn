@@ -3,6 +3,13 @@
 
 using namespace std;
 
+PIT *PIT::GetInstance(){
+	if(m_pit == NULL){
+		m_pit = new PIT();
+	}
+	return m_pit ;
+}
+
 PIT::PIT(){
 
 }
@@ -24,4 +31,8 @@ vector<int> PIT::search(char *name ) {
 
 void PIT::remove(char *name) {
 	this->mpit_table.remove(name) ;
+}
+
+void PIT::update(){
+	//cout << "update pit" << endl ;
 }

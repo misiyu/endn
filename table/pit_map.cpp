@@ -44,3 +44,11 @@ void Pit_Map::remove(char *name){
 	string name_str(name+3,name_len);
 	pit_map.erase(name_str) ;
 }
+
+void Pit_Map::update(){
+	map<string,struct pit_map_vt*>::iterator it = pit_map.begin() ;
+	for( ; it != pit_map.end() ; it++ ){
+		it->second->expire_time -- ;
+		if(it->second->expire_time <= 0) pit_map.erase(it);
+	}
+}

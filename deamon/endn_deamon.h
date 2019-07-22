@@ -7,8 +7,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#include "common/globle_var.h"
+
+//#include "common/globle_var.h"
 #include "flist.h"
+#include "deamon/tcp_server.h"
+#include "deamon/usocket_server.h"
 
 #define P_FIFO "/tmp/endn_cmd_pipe"
 
@@ -19,8 +22,15 @@ public:
 	~Endn_Deamon();
 	void start() ;
 	void recv_cmd() ;
+	void update();
+
 private:
 	int exec_cmd(string cmd) ;
+	uint32_t mclock ;
+	Tcp_Server mtcp_server ;
+	USocket_Server musk_server ;
+	FIB *m_fib ;
+	PIT *m_pit ;
 	/* data */
 
 };

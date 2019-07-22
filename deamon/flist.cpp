@@ -3,14 +3,25 @@
 
 using namespace std;
 
+// 全局共用一个facelist 所以使用单例模式 
+FList *FList::GetInstance(){
+	if(m_flist == NULL){
+		m_flist = new FList() ;
+	}
+	return m_flist ;
+}
+
 FList::FList(){
+	cout << "flist init " << endl ;
 	for (int i = 0; i < FLIST_SZ; i++) {
 		this->flist[i] = NULL ;
 	}
+	printf("flist flist p =  %p\n", this->flist) ;
 	this->face_n = 0 ;
 }
 
 FList::~FList(){
+	cout << "flist destroy " << endl ;
 	for (int i = 0; i <FLIST_SZ; i++) {
 		if(this->flist[i] != NULL) {
 			this->flist[i]->stop() ;
@@ -35,14 +46,21 @@ int FList::get_new_fid(){
 	else return -1 ;
 }
 
-int FList::s_add_tcp_face(char *cip , int sockfd){
+// cip 为发起连接的主机的地址
+int FList::s_add_tcp_face(const char *cip , int sockfd){
+	cout <<" flist cip = " << cip <<  endl ;
+	printf("flist get new fid %p\n", this->flist) ;
 	int faceid = get_new_fid();
+	cout << "flist new face id = " << faceid ;
 	if(faceid < 0) return -1 ;
 	flist[faceid] = new Face(cip , sockfd);
+	flist[faceid]->start();
 	face_n ++ ;
 	return faceid ;
 }
-int FList::c_add_tcp_face(char *sip , int port){
+
+// sip 为服务器的IP地址
+int FList::c_add_tcp_face(const char *sip , int port){
 	int faceid = get_new_fid();
 	if(faceid < 0) return -1 ;
 	int sockfd ;

@@ -12,10 +12,11 @@ using std::string ;
 enum CH_TYPE { ETH , TCP } ;
 enum FACE_STATE { ACTIVE , DEAD } ;
 
+class FList ;
 class Face
 {
 public:
-	Face(char *dip , int sockfd);
+	Face(const char *dip , int sockfd);
 	void stop();
 	void start() ;
 	static void *search(void *param) ;
@@ -36,6 +37,9 @@ private:
 	enum FACE_STATE m_state ;
 	Channel * mchannel ;
 	string daddr ;
+	FIB *m_fib ;
+	PIT *m_pit ;
+	FList *m_flist ;
 	
 };
 

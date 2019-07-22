@@ -41,8 +41,8 @@ public:
 	// ret:
 	//		face list 
 	vector<int> search(char *name ) ;
-
 	void remove(char *name) ;
+	void update();
 
 private:
 	map<string,struct pit_map_vt*> pit_map ;

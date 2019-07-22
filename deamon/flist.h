@@ -8,15 +8,19 @@ class Face ;
 class FList
 {
 public:
-	FList();
 	~FList();
-	int s_add_tcp_face(char *cip, int sockfd);
-	int c_add_tcp_face(char *sip, int port );
+	static FList * GetInstance() ;
+	int s_add_tcp_face(const char *cip, int sockfd);
+	int c_add_tcp_face(const char *sip, int port );
 	int get_new_fid();
 
 	/* data */
 	Face *flist[FLIST_SZ] ;
 	int face_n ;
+	
+private :
+	FList();
+	static FList *m_flist ;
 } ;
 
 //FList *FList_obj ;
