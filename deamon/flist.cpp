@@ -30,6 +30,8 @@ FList::~FList(){
 	}
 }
 
+
+// 功能 ： 在facelist中获得一个新的fid
 int FList::get_new_fid(){
 	int i = 0 ;
 	for (i = 0; i < FLIST_SZ; i++) {
@@ -46,7 +48,9 @@ int FList::get_new_fid(){
 	else return -1 ;
 }
 
+// 功能： 在服务器侧被动添加一个face
 // cip 为发起连接的主机的地址
+// 返回值  new face id
 int FList::s_add_tcp_face(const char *cip , int sockfd){
 	cout <<" flist cip = " << cip <<  endl ;
 	printf("flist get new fid %p\n", this->flist) ;
@@ -59,7 +63,9 @@ int FList::s_add_tcp_face(const char *cip , int sockfd){
 	return faceid ;
 }
 
+// 功能：在发起连接一侧，主动添加一个TCP的face
 // sip 为服务器的IP地址
+// 返回值  new face id
 int FList::c_add_tcp_face(const char *sip , int port){
 	int faceid = get_new_fid();
 	if(faceid < 0) return -1 ;
@@ -77,4 +83,24 @@ int FList::c_add_tcp_face(const char *sip , int port){
 		return 0 ;
 	}
 	return s_add_tcp_face(sip , sockfd) ;
+}
+
+int FList::add_ether_face(string &if_name, uint8_t *s_mac ){
+	int faceid = get_new_fid() ;
+	if(faceid < 0 ) return -1 ;
+	flist[faceid] = new Face(if_name , s_mac) ;
+	flist[faceid]->start() ;
+	face_n ++ ;
+	return faceid ;
+}
+
+// 功能：查看所有face的信息
+string FList::get_flist_info(){
+	std::stringstream ss ;
+	for (int i = 0; i < FLIST_SZ; i++) {
+		if(flist[i] != NULL && flist[i]->m_state == ACTIVE ){
+			ss << "faceid=" << i << " remote="<<flist[i]->daddr <<"\n" ;
+		}
+	}
+	return ss.str() ;
 }

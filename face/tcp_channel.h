@@ -25,8 +25,8 @@ public:
 	// 收数据进程 
 	static void *recv(void *para) ; 
 	static void *send(void *para) ;
-	void start();
-	void stop();
+	virtual void start();
+	virtual void stop();
 
 private:
 	/* data */

@@ -10,6 +10,8 @@ using std::pair ;
 using std::vector ;
 using std::string ;
 
+#include "common/globle_var.h"
+
 #define EXPIRE_T 300   // expire time s
 
 struct fib_map_vt{
@@ -42,6 +44,7 @@ public:
 	void remove(const char *name) ;
 	map<string, struct fib_map_vt*>::iterator recur_search(const char *name ,
 		int s_len , int len);
+	string get_table();
 
 private:
 	map<string,struct fib_map_vt*> fib_map ;

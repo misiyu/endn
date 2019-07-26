@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "fib_map.h"
 
 using std::cout ;
@@ -86,4 +87,19 @@ void Fib_Map::remove(const char *name){
 	uint16_t name_len = *((uint16_t*)(name+1));
 	string name_str(name+3,name_len);
 	fib_map.erase(name_str) ;
+}
+
+string Fib_Map::get_table(){
+	std::stringstream ss ;
+	map<string,struct fib_map_vt*>::iterator it = fib_map.begin() ;
+	for( ; it != fib_map.end() ; it ++ ){
+		string prefix = decode_name(it->first.data()) ;
+		ss << "prefix=" << prefix << " faceid=" ;
+		vector<int> &face_list = it->second->face_list;
+		for (int i = 0; i < face_list.size(); i++) {
+			ss<<face_list[i]<<"," ;
+		}
+		ss << "\n" ;
+	}
+	return ss.str() ;
 }

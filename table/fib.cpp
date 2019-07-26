@@ -38,3 +38,7 @@ void FIB::remove(const char *name) {
 void FIB::update(){
 	//cout << "update fib " << endl ;
 }
+
+string FIB::get_table(){
+	return this->mfib_table.get_table() ;
+}

@@ -48,6 +48,7 @@ private:
 	queue<struct packet_t*> send_q ;
 	pthread_t stid ;
 	pthread_mutex_t send_q_mutex ;   // 发送队列读写锁
+	pthread_cond_t send_data ;  // 发送队列中有数据，条件变量
 
 	map<string, void*> interestFilter ;
 

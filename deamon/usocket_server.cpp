@@ -38,11 +38,11 @@ static void get_filter(vector<string> &filter , int sockfd){
 	while(i < rlen){
 		uint16_t p_len = *((uint16_t*)(buff+i)) ;
 		string prefix(buff+i-1 , p_len +3) ;
-		cout << "get_filter prefix = " << prefix << endl ;
-		cout << "size of prefix = " << prefix.size() << endl ;
-		for(int j = 0 ; j < prefix.size() ; j++){
-			printf("%x " , prefix[j]) ;
-		}
+		//cout << "get_filter prefix = " << prefix << endl ;
+		//cout << "size of prefix = " << prefix.size() << endl ;
+		//for(int j = 0 ; j < prefix.size() ; j++){
+			//printf("%x " , prefix[j]) ;
+		//}
 		filter.push_back(prefix) ;
 		i += (3+p_len) ;
 	}
@@ -83,7 +83,7 @@ void *USocket_Server::run(void *param){
 		int filter_sz = filter.size() ;
 		cout << "filter size == " << filter_sz << endl ;
 		for (int j = 0; j < filter_sz; j++) {
-			cout << "========================" << endl ;
+			//cout << "========================" << endl ;
 			cout << "add a route entry : " << filter[j] << " face id = " << face_id  << endl ;
 			_this->m_fib->add(filter[j].data() , face_id);
 			// 添加到达这个face的路由

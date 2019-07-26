@@ -1,15 +1,26 @@
 #include <iostream>
 #include "face.h"
+#include "deamon/flist.h"
 
 using namespace std;
 
 Face::Face(const char *dip , int sockfd){
 	daddr = dip ;
-	this->sockfd = sockfd ;
 	mchannel = new Tcp_Channel(sockfd) ;
 	m_fib = FIB::GetInstance() ;
 	m_pit = PIT::GetInstance() ;
 	m_flist = FList::GetInstance() ;
+	this->m_state = ACTIVE ;
+
+}
+
+Face::Face(string &if_name, const uint8_t* s_mac ){
+	daddr = if_name ;
+	mchannel = new Ether_Channel(if_name,s_mac) ;
+	m_fib = FIB::GetInstance() ;
+	m_pit = PIT::GetInstance() ;
+	m_flist = FList::GetInstance() ;
+	this->m_state = ACTIVE ;
 }
 
 Face::~Face(){
@@ -27,24 +38,37 @@ void Face::stop(){
 
 }
 
-int Face::send2face(vector<int> &face_list , int &clen){
+int Face::send2face(vector<int> &face_list , int clen){
 	int face_list_n = face_list.size();
 	for (int i = 0; i < face_list_n; i++) {
-		m_flist->flist[face_list[i]]->add2ch(this->mchannel->mrqueue.get_head_p(),
-				clen);
+		m_flist->flist[face_list[i]]->add2chsq(
+				this->mchannel->mrqueue.get_head_p(), clen);
 	}
 	(this->mchannel->mrqueue).rmv_n(clen) ;
 }
 
-int Face::add2ch(char *data , int &len){
+int Face::add2chsq(char *data , int len){
+	bool need_signal = this->mchannel->msqueue.is_empty() ;
 	this->mchannel->msqueue.push_ndata(data,len);
+	if(need_signal) pthread_cond_signal(&(this->mchannel->send_data)) ;
+}
+
+int Face::add2chrq(char *data , int len){
+	bool need_signal = this->mchannel->mrqueue.is_empty() ;
+	this->mchannel->mrqueue.push_ndata(data,len);
+	if(need_signal) pthread_cond_signal(&(this->mchannel->recv_data)) ;
 }
 
 void *Face::search(void *param){
 	Face *_this = (Face*)param ;
 	
 	while(1){
-		while(RQueue.is_empty()) ;
+		pthread_mutex_lock(&(_this->mchannel->rd_mutex)) ;
+		while(RQueue.is_empty()) {
+			pthread_cond_wait(&(_this->mchannel->recv_data) ,
+					&(_this->mchannel->rd_mutex)) ;
+		}
+		pthread_mutex_unlock(&(_this->mchannel->rd_mutex)) ;
 		cout << "face get packet" << endl ;
 		uint16_t name_len = 0 ;
 		RQueue.get_ndata(RQueue.get_head()+4,(char*)&name_len,2);

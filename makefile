@@ -4,10 +4,22 @@ OBJ_DIR = ./objs
 
 #SRC=$(wildcard $(SRC_DIR)/*.cpp)   
 
-SRC=  main.cpp ./deamon/endn_deamon.cpp ./face/face.cpp  \
-	  ./deamon/tcp_server.cpp ./deamon/flist.cpp ./face/tcp_channel.cpp \
-	  ./table/pit.cpp ./table/pit_map.cpp ./table/fib.cpp ./table/fib_map.cpp \
-	  ./deamon/usocket_server.cpp ./common/globle_var.cpp ./common/r_queue.cpp
+SRC=  main.cpp \
+	  ./deamon/endn_deamon.cpp \
+	  ./deamon/tcp_server.cpp \
+	  ./deamon/flist.cpp \
+	  ./deamon/usocket_server.cpp \
+	  ./deamon/ether_recvs.cpp \
+	  ./face/face.cpp  \
+	  ./face/tcp_channel.cpp \
+	  ./face/channel.cpp \
+	  ./face/ether_channel.cpp \
+	  ./table/pit.cpp \
+	  ./table/pit_map.cpp \
+	  ./table/fib.cpp \
+	  ./table/fib_map.cpp \
+	  ./common/globle_var.cpp \
+	  ./common/r_queue.cpp \
 
 OBJS := $(patsubst %.cpp, %.o,$(SRC))
 

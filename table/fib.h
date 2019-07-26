@@ -16,6 +16,7 @@ public:
 	vector<int> search(const char *name ) ;
 	void remove(const char *name) ;
 	void update() ;
+	string get_table() ;
 
 private:
 	FIB();

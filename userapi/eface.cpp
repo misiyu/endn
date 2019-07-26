@@ -28,6 +28,7 @@ int get_sockfd(){
 
 EFace::EFace(){
 	pthread_mutex_init(&send_q_mutex , NULL);
+	pthread_cond_init(&send_data , NULL) ;  // 初始化条件变量
 	state = 0 ;
 	this->sockfd = get_sockfd();
 	filter_str = new struct packet_t ;
@@ -46,9 +47,11 @@ void EFace::expressInterest(EInterest &einterest ) {
 	struct packet_t *pkt = new struct packet_t ;
 	pkt->len = einterest.get_packet(pkt->data);
 	printf("expressInterest pkt->data = %p\n",pkt->data) ;  
+	bool need_signal = send_q.empty() ;
 	pthread_mutex_lock(&send_q_mutex);
 	send_q.push(pkt);
 	pthread_mutex_unlock(&send_q_mutex);
+	if(need_signal) pthread_cond_signal(&(this->send_data)) ;
 }
 
 void EFace::set_saddr(string prefix , void(*onData)(const EData&) ){
@@ -101,9 +104,11 @@ void EFace::processEvents() {
 void EFace::put(EData &data){
 	struct packet_t *packet = new struct packet_t ;
 	packet->len = data.get_packet(packet->data);
+	bool need_signal = send_q.empty() ;
 	pthread_mutex_lock(&send_q_mutex);
 	send_q.push(packet);
 	pthread_mutex_unlock(&send_q_mutex);
+	if(need_signal) pthread_cond_signal(&(this->send_data)) ;
 }
 
 void EFace::shutdown(){
@@ -132,7 +137,11 @@ void *EFace::send(void *param){
 	int max_bf_sz = MAX_P_SZ*100;
 	char *send_buff = (char*)malloc(max_bf_sz) ;
 	while(1){
-		while(_this->send_q.empty()) ;
+		pthread_mutex_lock(&(_this->send_q_mutex)) ;
+		while(_this->send_q.empty()) {
+			pthread_cond_wait(&(_this->send_data) , &(_this->send_q_mutex)) ;
+		}
+		pthread_mutex_unlock(&(_this->send_q_mutex)) ;
 		if(_this->state == 1) break ;
 		int len = 0 ;
 

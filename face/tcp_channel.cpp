@@ -35,7 +35,9 @@ void* Tcp_Channel::recv(void *para)
 		int rlen = read(_this->sockfd , buffp , free_size) ;
 		if(rlen <= 0) break ;
 		cout << "channel recv len = " << rlen << endl ;
+		bool need_signal = recv_queue->is_empty() ;
 		recv_queue->add_n(rlen) ;
+		if(need_signal) pthread_cond_signal(&(_this->recv_data)) ;
 		printf("recv <<< \n") ;
 		//sleep(1) ;
 	}
@@ -46,8 +48,14 @@ void* Tcp_Channel::send(void *para){
 	Tcp_Channel *_this = (Tcp_Channel*)para ;
 	Tcp_SQueue *send_queue = &(_this->msqueue) ;
 	while(_this->state){
-		while(send_queue->is_empty()) ;
-		// wait until has data in send queue 
+		pthread_mutex_lock(&(_this->sd_mutex));	
+		while(send_queue->is_empty()) {
+			pthread_cond_wait(&(_this->send_data) , &(_this->sd_mutex)) ;
+		}
+		pthread_mutex_unlock(&(_this->sd_mutex));	
+
+		cout << "tcp channel send 发送数据" << endl ;
+
 		int data_len = send_queue->get_cdata_len();
 		char *buffp = send_queue->get_head_p();
 		// write data to socket
