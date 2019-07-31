@@ -67,6 +67,11 @@ void *USocket_Server::run(void *param){
 	bind(server_sockfd , (struct sockaddr*)&server_address,server_len);
 	listen(server_sockfd, FLIST_SZ) ;
 	printf("server: %s wait for client connect\n" , USOCKET_ID) ;
+
+	string cmd = "chmod 666 " ;
+	cmd += USOCKET_ID ;
+	system(cmd.data()); 
+
 	client_len = sizeof(client_address);
 	while(1){
 		client_sockfd = accept(server_sockfd,(struct sockaddr*)&client_address,

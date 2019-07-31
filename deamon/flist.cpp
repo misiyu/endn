@@ -57,7 +57,7 @@ int FList::s_add_tcp_face(const char *cip , int sockfd){
 	int faceid = get_new_fid();
 	cout << "flist new face id = " << faceid ;
 	if(faceid < 0) return -1 ;
-	flist[faceid] = new Face(cip , sockfd);
+	flist[faceid] = new Face(cip , sockfd , faceid);
 	flist[faceid]->start();
 	face_n ++ ;
 	return faceid ;
@@ -88,7 +88,7 @@ int FList::c_add_tcp_face(const char *sip , int port){
 int FList::add_ether_face(string &if_name, uint8_t *s_mac ){
 	int faceid = get_new_fid() ;
 	if(faceid < 0 ) return -1 ;
-	flist[faceid] = new Face(if_name , s_mac) ;
+	flist[faceid] = new Face(if_name , s_mac, faceid) ;
 	flist[faceid]->start() ;
 	face_n ++ ;
 	return faceid ;

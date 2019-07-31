@@ -7,6 +7,7 @@ using namespace std;
 EInterest::EInterest(EName &ename , string &source_id): ename(ename),
 	msource_name(source_id){
 	this->has_content = false ;
+	this->content = NULL ;
 	this->packet_len = 3 ;
 	packet[0] = 0x5 ;   // 请求包标识 
 	uint16_t ename_len =  enpacket(&packet[3],ename.getData() , 0x7) ;
@@ -20,22 +21,36 @@ EInterest::EInterest(EName &ename , string &source_id): ename(ename),
 	*((uint16_t*)&packet[1]) = packet_len-3 ;
 }
 EInterest::~EInterest() {
-	free(packet) ;
 }
 
-string EInterest::getName(){
+string EInterest::getName() const {
 	return ename.getData() ;
 }
 
+string EInterest::get_saddr() const {
+	return this->msource_name ;
+}
+
+string EInterest::getContent() const {
+	if(content == NULL) return "" ;
+	uint16_t c_len = *((uint16_t*)(content-2)) ;
+	string ret(content,c_len) ;
+	return  ret;
+}
+
 void EInterest::setContent(const uint8_t* content , int c_len){
-	if(c_len > 0xffff) return ;
+	if(c_len > 0xffff || c_len <= 0) return ;
 	uint16_t mclen = c_len ;
 	packet[packet_len++] = 0x8 ;
 	*((uint16_t*)&packet[packet_len]) = mclen ;
 	packet_len += 2 ;
+	this->content = &packet[packet_len] ;
 	memcpy(&packet[packet_len], content ,mclen ) ;
 	packet_len += mclen ;
 	*((uint16_t*)&packet[1]) = packet_len-3 ;
+}
+void EInterest::setContent(const char* content , int c_len){
+	setContent((uint8_t*)content , c_len) ;
 }
 
 void EInterest::setInterestLifetime(){

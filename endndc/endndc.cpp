@@ -49,11 +49,13 @@ void show_route_usage(){
 	cout << "./endndc route add <prefix> <face id>" << endl ;
 	cout << "./endndc route remove <prefix> [face id]" << endl ;
 	cout << "./endndc route list" << endl ;
+	exit(1) ;
 }
 void show_face_usage(){
 	cout << "./endndc face add <remove_url> " << endl ;
 	cout << "./endndc face remove [face id]" << endl ;
 	cout << "./endndc face list" << endl ;
+	exit(1) ;
 }
 
 void route_cmd(int argc , char **argv){
@@ -65,7 +67,7 @@ void route_cmd(int argc , char **argv){
 		string cmd2 = argv[2] ;
 		root["cmd2"] = cmd2;
 		if(cmd2 == "add"){
-			if(argc != 5) show_face_usage() ;
+			if(argc != 5) show_route_usage() ;
 			string prefix = argv[3] ;
 			root["prefix"] = prefix ;
 			int face_id = atoi(argv[4]) ;

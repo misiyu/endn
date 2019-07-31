@@ -62,7 +62,7 @@ void Ether_RecvS::stop(){
 }
 
 void *Ether_RecvS::recv(void *param){
-	cout << "pthread recv start" << endl ;
+	cout << "Ether_RecvS thread recv start" << endl ;
 	
 	Ether_RecvS *_this = (Ether_RecvS*)param ;
 	int fd = socket(PF_PACKET , SOCK_RAW , htons(NET_TYPE)) ;
@@ -78,6 +78,7 @@ void *Ether_RecvS::recv(void *param){
 	{
 		int bytes = recvfrom(fd, buf, sizeof(buf), 0 , (struct sockaddr*)&device, 
 				&sll_len);
+
 		printf("ether recv %d byte \n",bytes);
 
 		uint16_t d_len = bytes-14 ;

@@ -56,15 +56,19 @@ void *Ether_Channel::send(void *param){
 	memcpy(ether_p+6 , _this->s_mac , 6) ;
 	ether_p[12] = (NET_TYPE >> 8) ;
 	ether_p[13] = (NET_TYPE & 0xff) ;
+
+	if(_this->state) cout << "Ether_Channel send thread has started " << endl ;
 	while(_this->state){
 		pthread_mutex_lock(&(_this->sd_mutex));	
 		while(send_queue->is_empty()) {
 			memcpy(ether_p , _this->d_mac , 6) ;
 			pthread_cond_wait(&(_this->send_data) , &(_this->sd_mutex)) ;
+			cout << "ether channel send thread recv wake up signal " << endl ;
 		}
 		pthread_mutex_unlock(&(_this->sd_mutex));	
 
-		cout << "ether channel send 发送数据" << endl ;
+		cout << "ether channel send 发送数据  data len = "<< 
+			send_queue->get_data_len() << endl ;
 
 		int data_len = send_queue->get_cdata_len();
 		char *buffp = send_queue->get_head_p();
@@ -73,9 +77,11 @@ void *Ether_Channel::send(void *param){
 		if(send_len <= 50) {
 			*((uint16_t*)(ether_p+14)) = send_len ;
 			memcpy(ether_p+16 , buffp , send_len) ;
+			send_queue->rmv_n(send_len) ;
 			send_len += 16 ;
 		}else{
 			memcpy(ether_p+14 , buffp , send_len) ;
+			send_queue->rmv_n(send_len) ;
 			send_len += 14 ;
 		}
 		// write data to socket

@@ -32,15 +32,14 @@ public:
 	void expressInterest(EInterest &einterest  ) ;
 	void processEvents() ;
 	void shutdown();
-	void setInterestFilter( string prefix , 
-			void(*onInterest)(const EInterest &));
+	void setInterestFilter( string prefix , void(*onInterest)(const EInterest &));
 	void set_saddr( string prefix ,void(*onData)(const EData&) );
-	void put(EData &data) ;
+	void put(EData &edata) ;
 
 	// 将发送队列里的数据发送出去
 	static void *send(void *param) ;
 
-	void m_recv() ;  
+	int m_recv(uint8_t *buff , int buff_len , int start) ;  
 	void c_recv() ;  // 消费者的接收包程序
 	void p_recv() ;  // 生产者的接收包程序
 private:

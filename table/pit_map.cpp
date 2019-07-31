@@ -1,6 +1,8 @@
 #include <iostream>
 #include "pit_map.h"
 
+using namespace std ;
+
 Pit_Map::Pit_Map(){
 
 }
@@ -14,7 +16,7 @@ Pit_Map::~Pit_Map(){
 
 void Pit_Map::add(char *name , int face_id){
 	uint16_t name_len = *((uint16_t*)(name+1));
-	string name_str(name+3,name_len);
+	string name_str(name,name_len+3);
 	map<string, struct pit_map_vt*>::iterator it = pit_map.find(name_str);
 	if(it == pit_map.end()){
 		// not existed
@@ -27,7 +29,21 @@ void Pit_Map::add(char *name , int face_id){
 
 vector<int> Pit_Map::search(char *name) {
 	uint16_t name_len = *((uint16_t*)(name+1));
-	string name_str(name+3,name_len);
+	string name_str(name,name_len+3);
+
+	// probe ======================================================
+	//cout << "target = " << name_str << endl ;
+	//map<string,struct pit_map_vt*>::iterator it1 = pit_map.begin() ;
+	//for( ; it1 != pit_map.end() ; it1 ++ ){
+		//cout << it1->first << endl ;
+		//uint16_t n_len = *(uint16_t*)(it1->first.data()+1) + 3 ;
+		//for (int i = 0; i < n_len; i++) {
+			//printf("%x ",it1->first[i]) ;
+		//}
+		//printf("\n") ;
+	//}
+	// probe ======================================================
+
 	map<string, struct pit_map_vt*>::iterator it = pit_map.find(name_str);
 	if(it == pit_map.end()){
 		// not existed
@@ -41,7 +57,7 @@ vector<int> Pit_Map::search(char *name) {
 
 void Pit_Map::remove(char *name){
 	uint16_t name_len = *((uint16_t*)(name+1));
-	string name_str(name+3,name_len);
+	string name_str(name,name_len+3);
 	pit_map.erase(name_str) ;
 }
 

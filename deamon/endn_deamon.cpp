@@ -115,9 +115,12 @@ void Endn_Deamon::recv_cmd(){
 	if(access(PIPE_IN , F_OK) == 0){
 		remove(PIPE_IN) ;
 	}
-	if(mkfifo(PIPE_IN, 0777) < 0){
+	if(mkfifo(PIPE_IN, 0666) < 0){
 		printf("create named pipe failed\n");
 	}
+	string cmd = "chmod 666 " ;
+	cmd += PIPE_IN ;
+	system(cmd.data()) ;
 
 	fd = open(PIPE_IN , O_RDONLY | O_NONBLOCK) ;
 	while(1){

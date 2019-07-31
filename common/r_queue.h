@@ -2,7 +2,9 @@
 #define _R_QUEUE_H_
 
 #include <string.h>
-#define QUEUE_SZ 8000000
+#include <pthread.h>
+#define QUEUE_SZ 400
+//#define QUEUE_SZ 8000000
 
 class R_Queue
 {
@@ -41,6 +43,8 @@ protected:
 	int rear ;
 	int head ;
 	char buff[QUEUE_SZ];
+	pthread_cond_t has_data ;
+	pthread_mutex_t m_mutex ;
 
 private:
 	/* data */

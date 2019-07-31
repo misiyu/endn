@@ -20,8 +20,8 @@ class FList ;
 class Face
 {
 public:
-	Face(const char *dip , int sockfd);
-	Face(string &if_name , const uint8_t *s_mac);
+	Face(const char *dip , int sockfd , int face_id);
+	Face(string &if_name , const uint8_t *s_mac , int face_id);
 	void stop();
 	void start() ;
 	static void *search(void *param) ;

@@ -5,6 +5,8 @@ using namespace std;
 R_Queue::R_Queue(){
 	this->head = 0 ;
 	this->rear = 0 ;
+	pthread_cond_init(&has_data , NULL) ;
+	pthread_mutex_init(&m_mutex , NULL) ;
 }
 R_Queue::~R_Queue(){
 
@@ -19,17 +21,24 @@ bool R_Queue::is_full(){
 	return ((this->rear+1)%QUEUE_SZ == this->head) ;
 }
 bool R_Queue::is_empty(){
-	return (this->head == this->rear) ;
+	bool ret = false ;
+	pthread_mutex_lock(&m_mutex) ;
+	ret = (this->head == this->rear) ;
+	pthread_mutex_unlock(&m_mutex) ;
+	return ret ;
 }
 int R_Queue::add_n(int n){
-	//for (int i = 0; i < n; i++) {
-		//int j = (rear+i)%QUEUE_SZ ;
-		//printf("%x ",buff[j]) ;
-	//}
+	bool need_signal = false ;
+	pthread_mutex_lock(&m_mutex) ;
+	need_signal = (head == rear) ;
 	rear = (rear + n) % QUEUE_SZ ;
+	pthread_mutex_unlock(&m_mutex) ;
+	if(need_signal) pthread_cond_signal(&has_data) ;
 }
 int R_Queue::rmv_n(int n){
+	pthread_mutex_lock(&m_mutex) ;
 	head = (head + n) % QUEUE_SZ ;
+	pthread_mutex_unlock(&m_mutex) ;
 }
 char *R_Queue::get_head_p(){
 	return &(buff[this->head]);
@@ -46,11 +55,12 @@ int R_Queue::get_free_space(){
 	return (head-rear-1+QUEUE_SZ)%QUEUE_SZ ;
 }
 // get the length of a continuous free space
+// 获得从rear开始往后的连续剩余空间的长度 
 int R_Queue::get_cfree_space(){
 	int space = 0 ;
 	if(head <= rear ) {
 		space = QUEUE_SZ - rear ;
-		if(head == 0) space - 1 ;
+		if(head == 0) space -= 1 ;
 	}else{
 		space = head - rear - 1 ;
 	}
@@ -79,7 +89,8 @@ int R_Queue::get_ndata(int start , char *data ,int n ){
 }
 // 队列中加入n字节数据
 int R_Queue::push_ndata(char *data , int n){
-	if(get_free_space() < n) return -1 ;	
+	//if(get_free_space() < n) return -1 ;	
+	while(get_free_space() < n ) ;
 	int clen ;
 	while(n > 0){
 		clen = get_cfree_space() ;
