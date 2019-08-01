@@ -33,7 +33,7 @@ public:
 private:
 	/* data */
 	pthread_t m_tid ;
-	int if_fs[MAX_IF] ;
+	//int if_fs[MAX_IF] ;
 	FList *m_flist ;
 };
 

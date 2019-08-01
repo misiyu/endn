@@ -6,6 +6,7 @@ R_Queue::R_Queue(){
 	this->head = 0 ;
 	this->rear = 0 ;
 	pthread_cond_init(&has_data , NULL) ;
+	pthread_cond_init(&has_space , NULL) ;
 	pthread_mutex_init(&m_mutex , NULL) ;
 }
 R_Queue::~R_Queue(){
@@ -36,9 +37,12 @@ int R_Queue::add_n(int n){
 	if(need_signal) pthread_cond_signal(&has_data) ;
 }
 int R_Queue::rmv_n(int n){
+	bool need_signal = false ;
 	pthread_mutex_lock(&m_mutex) ;
+	need_signal = ((rear+1)%QUEUE_SZ == head) ;
 	head = (head + n) % QUEUE_SZ ;
 	pthread_mutex_unlock(&m_mutex) ;
+	if(need_signal) pthread_cond_signal(&has_space) ;
 }
 char *R_Queue::get_head_p(){
 	return &(buff[this->head]);
@@ -99,4 +103,20 @@ int R_Queue::push_ndata(char *data , int n){
 		add_n(clen);
 		n -= clen ;
 	}
+}
+
+// 等待数据，若队列为空，当前进程等待在 has_data变量下
+void R_Queue::wait4data() {
+	pthread_mutex_lock(&m_mutex) ;
+	while(head == rear) {
+		pthread_cond_wait(&has_data , &m_mutex) ;
+	}
+	pthread_mutex_unlock(&m_mutex) ;
+}
+void R_Queue::wait4space() {
+	pthread_mutex_lock(&m_mutex) ;
+	while( (rear+1)%QUEUE_SZ == head) {
+		pthread_cond_wait(&has_space , &m_mutex) ;
+	}
+	pthread_mutex_unlock(&m_mutex) ;
 }

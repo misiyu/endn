@@ -22,6 +22,11 @@ void Ether_Channel::stop(){
 	printf("stop ethernet channel >>> \n");
 }
 
+// 功能 : 初始化一个以太网socket ，初始化device结构
+// 参数： device 结构引用
+//			s_mac 源mac地址
+//			if_name 网卡名称
+// 返回值： socket id
 int get_eth_sockfd(struct sockaddr_ll &device , const uint8_t *s_mac ,
 		 const char *if_name){
 	int sockfd ;
@@ -41,6 +46,7 @@ int get_eth_sockfd(struct sockaddr_ll &device , const uint8_t *s_mac ,
 	return sockfd ;
 }
 
+
 void *Ether_Channel::send(void *param){
 	Ether_Channel *_this = (Ether_Channel*)param ;
 	Tcp_SQueue *send_queue = &(_this->msqueue) ;
@@ -59,15 +65,10 @@ void *Ether_Channel::send(void *param){
 
 	if(_this->state) cout << "Ether_Channel send thread has started " << endl ;
 	while(_this->state){
-		pthread_mutex_lock(&(_this->sd_mutex));	
-		while(send_queue->is_empty()) {
-			memcpy(ether_p , _this->d_mac , 6) ;
-			pthread_cond_wait(&(_this->send_data) , &(_this->sd_mutex)) ;
-			cout << "ether channel send thread recv wake up signal " << endl ;
-		}
-		pthread_mutex_unlock(&(_this->sd_mutex));	
+		memcpy(ether_p , _this->d_mac , 6) ;
+		send_queue->wait4data() ;
 
-		cout << "ether channel send 发送数据  data len = "<< 
+		cout << "ether channel "<< _this->if_name<<" send 发送数据  data len = "<< 
 			send_queue->get_data_len() << endl ;
 
 		int data_len = send_queue->get_cdata_len();

@@ -14,15 +14,16 @@ void onInterest(const EInterest& einterest){
 
 	cout << "einterest name = "<< einterest.getName() << endl ;
 	cout << "source address  = "<< einterest.get_saddr() << endl ;
-	cout << "content = "<< einterest.getContent() << endl ;
+	//cout << "content = "<< einterest.getContent() << endl ;
+	cout << "content len = "<< einterest.getContent().size() << endl ;
 
 	cout << "end, onInterest<<<<<<<<<<<<" << endl ;
 	
-	//string saddr = einterest.get_saddr() ;
-	//EData edata(saddr) ;
-	//string content = "hi-hi" ;
-	//edata.setContent(content.data() , content.size()) ;
-	//eface.put(edata) ;
+	string saddr = einterest.get_saddr() ;
+	EData edata(saddr) ;
+	string content = "hi-hi" ;
+	edata.setContent(content.data() , content.size()) ;
+	eface.put(edata) ;
 	
 }
 

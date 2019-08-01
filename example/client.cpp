@@ -14,7 +14,7 @@ void onData(const EData& edata){
 
 void *send_packet(void *param){
 	EInterest *einterest = (EInterest*)param ;
-	for (int i = 0; i < 10000; i++) {
+	for (int i = 0; i < 100000; i++) {
 		//usleep(10000) ;
 		cout << "send_packet thread send " << i << endl ;
 		eface.expressInterest(*einterest) ;
@@ -30,12 +30,13 @@ int main()
 	EName ename(interest_name.data()) ;
 	EInterest einterest(ename , source_addr) ;
 	string content = "hello.";
-	einterest.setContent(content.data(), content.size()) ;
-	//for (int i = 0; i < 10; i++) {
-		eface.expressInterest(einterest);
-	//}
+	char content1[8000] ;
+	memset(content1,'a' , 8000) ;
+	//einterest.setContent(content.data(), content.size()) ;
+	einterest.setContent(content1, 8000) ;
+	eface.expressInterest(einterest);
 	pthread_t tid ;
-	pthread_create(&tid , NULL , send_packet , (void*)&einterest) ;
+	//pthread_create(&tid , NULL , send_packet , (void*)&einterest) ;
 	eface.processEvents() ;		// 发送数据
 
 	for (int i = 0; i < 10; i++) {

@@ -4,6 +4,11 @@
 
 using namespace std;
 
+// 功能： 构建TCP或unix_socket类型的face
+// 参数：
+//		  dip 目的IP
+//		  sockfd  socket id get through connect or accept
+//		  face_id  face index in the flist
 Face::Face(const char *dip , int sockfd, int face_id){
 	daddr = dip ;
 	this->face_id = face_id ;
@@ -15,6 +20,11 @@ Face::Face(const char *dip , int sockfd, int face_id){
 
 }
 
+// 功能： 构建ethernet类型的face
+// 参数：
+//		  if_name 网卡名称
+//		  s_mac  网卡的mac地址
+//		  face_id  face index in the flist
 Face::Face(string &if_name, const uint8_t* s_mac , int face_id){
 	daddr = if_name ;
 	this->face_id = face_id ;
@@ -31,65 +41,62 @@ Face::~Face(){
 	}
 }
 
+// 功能 ： 启动channel 传输线程以及包转发线程forward
 void Face::start(){
 	mchannel->start() ;
-	int ret = pthread_create(&(mtid) , NULL , search ,(void*)this) ;
+	int ret = pthread_create(&(mtid) , NULL , forward ,(void*)this) ;
 }
 
 void Face::stop(){
-
+	this->m_state = DEAD ;
 }
 
+// 功能: 将接收队列中，连续长度为clen的数据发送到多个face中
+// 参数: face_list 发送出去的face列表
+//			clen 数据长度
+//			
 int Face::send2face(vector<int> &face_list , int clen){
 	int face_list_n = face_list.size();
 	for (int i = 0; i < face_list_n; i++) {
 		m_flist->flist[face_list[i]]->add2chsq(
 				this->mchannel->mrqueue.get_head_p(), clen);
 	}
-	//pthread_mutex_lock(&(this->mchannel->rd_mutex)) ;
 	(this->mchannel->mrqueue).rmv_n(clen) ;
-	//pthread_mutex_unlock(&(this->mchannel->rd_mutex)) ;
 }
 
+// 功能： 将长度为len的数据添加到本face的发送队列中
+// 参数： data  buffer指针
+//			len 数据长度
 int Face::add2chsq(char *data , int len){
 	cout << "face : send to send queue " << endl ;
-	//bool need_signal = this->mchannel->msqueue.is_empty() ;
 	this->mchannel->msqueue.push_ndata(data,len);
-	//if(need_signal) { 
-		//pthread_cond_signal(&(this->mchannel->send_data)) ; 
-		//cout << "wake up send thread " << endl ;
-	//}
 }
 
+// 功能： 将长度为len的数据添加到本face的接收队列中（以太网face用到这个函数）
+// 参数： data  buffer指针
+//			len 数据长度
 int Face::add2chrq(char *data , int len){
-	//bool need_signal = this->mchannel->mrqueue.is_empty() ;
 	this->mchannel->mrqueue.push_ndata(data,len);
-	//if(need_signal) pthread_cond_signal(&(this->mchannel->recv_data)) ;
 }
 
 
 // 功能 ： 线程函数，从face的接收数据队列中取出一个数据包，并进行pit和fib查找
 //		   ，如果找到转发的下一个face，则将这个数据包加入到下一个face的send队列中
 //		   
-void *Face::search(void *param){
+void *Face::forward(void *param){
 	Face *_this = (Face*)param ;
 	char saddr[MAX_NAME_LEN] ;
 	uint16_t saddr_len ;
-
 	static int get_p_count = 0 ;
 
-	//while(1){
-		//usleep(200) ;
-	//}
-
 	while(1){
-		pthread_mutex_lock(&(_this->mchannel->rd_mutex)) ;
-		while(RQueue.is_empty()) {
-			pthread_cond_wait(&(_this->mchannel->recv_data) ,
-					&(_this->mchannel->rd_mutex)) ;
-		}
-		pthread_mutex_unlock(&(_this->mchannel->rd_mutex)) ;
-		cout << "Face::search packet ==================================== " << get_p_count <<  endl ;
+		RQueue.wait4data() ;  
+		/*
+		 *wait for data , if receive queue is empty then wait 
+		 *under the condition variant 
+		 */
+		cout << "Face::forward packet ================ " << get_p_count <<  endl ;
+		while(  RQueue.get_data_len() < 6 ) ; 
 		uint16_t name_len = 0 ;
 		RQueue.get_ndata(RQueue.get_head()+4,(char*)&name_len,2);
 		//cout << "face packet name_len = " << name_len << endl ;
@@ -98,11 +105,6 @@ void *Face::search(void *param){
 		char name[MAX_NAME_LEN];
 		RQueue.get_ndata(RQueue.get_head()+3 , name , name_len+3);
 		// 获得数据包名称: 两层 TLV 格式
-		//for (int i = 0; i < name_len+3; i++) {
-			//printf("%x " , name[i]) ;
-		//}
-		//printf("\n") ;
-		//exit(0) ;
 		uint16_t packet_len = 0 ;
 		RQueue.get_ndata(RQueue.get_head()+1,(char*)&packet_len,2) ;
 		packet_len += 3 ;
@@ -114,7 +116,9 @@ void *Face::search(void *param){
 		uint8_t p_type ;
 		RQueue.get_ndata(RQueue.get_head(),(char*)&p_type,1) ;
 		if(p_type == 0x5) {
+			while(RQueue.get_data_len() < 9+name_len ) ; 
 			RQueue.get_ndata(RQueue.get_head()+7+name_len,(char*)&saddr_len,2) ;
+			while(RQueue.get_data_len() < 9+name_len+saddr_len ) ; 
 			RQueue.get_ndata(RQueue.get_head()+6+name_len,saddr, saddr_len+3) ;
 			_this->m_pit->add(saddr , _this->face_id) ;
 			face_list = _this->m_fib->search(name) ;
@@ -139,7 +143,7 @@ void *Face::search(void *param){
 		}else{
 			RQueue.rmv_n(packet_len) ;
 		}
-		cout << "face get packet ==================================== " << get_p_count++ <<  endl ;
+		cout << "face get packet ==================== " << get_p_count++ <<  endl ;
 		//exit(0) ;
 	}
 

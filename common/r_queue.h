@@ -3,8 +3,8 @@
 
 #include <string.h>
 #include <pthread.h>
-#define QUEUE_SZ 400
-//#define QUEUE_SZ 8000000
+//#define QUEUE_SZ 400
+#define QUEUE_SZ 8000000
 
 class R_Queue
 {
@@ -36,14 +36,18 @@ public:
 	// 从start开始，往后取n字节数据;
 	int get_ndata(int start , char *data ,int n );
 
-
 	// 队列中加入n字节数据;
 	int push_ndata(char *data , int n);
+
+	// 等待数据，若队列为空，当前进程等待在 has_data变量下
+	void wait4data() ;
+	void wait4space() ;
 protected:
 	int rear ;
 	int head ;
 	char buff[QUEUE_SZ];
 	pthread_cond_t has_data ;
+	pthread_cond_t has_space ;
 	pthread_mutex_t m_mutex ;
 
 private:

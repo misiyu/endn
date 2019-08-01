@@ -13,7 +13,7 @@ public:
 	static FList * GetInstance() ;
 	int s_add_tcp_face(const char *cip, int sockfd);
 	int c_add_tcp_face(const char *sip, int port );
-	int add_ether_face(string &if_name, uint8_t *s_mac );
+	int add_ether_face(string &if_name, uint8_t *s_mac ,int faceid);
 	// 
 	string get_flist_info();
 

@@ -24,7 +24,7 @@ public:
 	Face(string &if_name , const uint8_t *s_mac , int face_id);
 	void stop();
 	void start() ;
-	static void *search(void *param) ;
+	static void *forward(void *param) ;
 	int send2face(vector<int> &face_list, int clen) ;
 
 	// 功能： 往发送队列里加入长度为len的数据

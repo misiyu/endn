@@ -36,16 +36,13 @@ void Ether_RecvS::get_ifs(){
 		printf("%s",buff);
 		memset(buff , 0 , sizeof(buff)) ;
 		// 添加一个以太网类型的face
-		if_fs[if_idx] = m_flist->add_ether_face(if_name , mac) ;
+		m_flist->add_ether_face(if_name , mac , if_idx) ;
 	}
 	pclose(fp);
 }
 
 Ether_RecvS::Ether_RecvS(){
 	this->m_flist = FList::GetInstance() ;
-	for (int i = 0; i < MAX_IF; i++) {
-		if_fs[i] = 0 ;
-	}
 	get_ifs() ;
 }
 
@@ -61,6 +58,7 @@ void Ether_RecvS::stop(){
 
 }
 
+// 功能 ： 接收以太网数据包，并转发到相应的网卡对应的face中
 void *Ether_RecvS::recv(void *param){
 	cout << "Ether_RecvS thread recv start" << endl ;
 	
@@ -78,12 +76,12 @@ void *Ether_RecvS::recv(void *param){
 	{
 		int bytes = recvfrom(fd, buf, sizeof(buf), 0 , (struct sockaddr*)&device, 
 				&sll_len);
-
 		printf("ether recv %d byte \n",bytes);
-
+		//continue ;
 		uint16_t d_len = bytes-14 ;
 		int if_id = device.sll_ifindex ;
 		int faceid = if_id ;
+		//cout << "faceid = " << faceid << endl ;
 		if(bytes <= 66){
 			d_len = *((uint16_t*)(buf+14)) ;
 			_this->m_flist->flist[faceid]->add2chrq(buf+16 , d_len);

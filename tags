@@ -44,8 +44,8 @@ FIB	table/fib.h	/^class FIB$/;"	c
 FLIST_SZ	deamon/flist.h	6;"	d
 FList	deamon/flist.cpp	/^FList::FList(){$/;"	f	class:FList
 FList	deamon/flist.h	/^class FList$/;"	c
-Face	face/face.cpp	/^Face::Face(const char *dip , int sockfd){$/;"	f	class:Face
-Face	face/face.cpp	/^Face::Face(string &if_name, const uint8_t* s_mac ){$/;"	f	class:Face
+Face	face/face.cpp	/^Face::Face(const char *dip , int sockfd, int face_id){$/;"	f	class:Face
+Face	face/face.cpp	/^Face::Face(string &if_name, const uint8_t* s_mac , int face_id){$/;"	f	class:Face
 Face	face/face.h	/^class Face$/;"	c
 Fib_Map	table/fib_map.cpp	/^Fib_Map::Fib_Map(){$/;"	f	class:Fib_Map
 Fib_Map	table/fib_map.h	/^class Fib_Map$/;"	c
@@ -75,9 +75,9 @@ OBJS	makefile	/^OBJS := $(patsubst %.cpp, %.o,$(SRC))$/;"	m
 OBJ_DIR	endndc/makefile	/^OBJ_DIR = .\/objs$/;"	m
 OBJ_DIR	example/makefile	/^OBJ_DIR = .\/objs$/;"	m
 OBJ_DIR	makefile	/^OBJ_DIR = .\/objs$/;"	m
-PIPE_IN	deamon/endn_deamon.h	19;"	d
+PIPE_IN	deamon/endn_deamon.h	20;"	d
 PIPE_IN	endndc/endndc.cpp	5;"	d	file:
-PIPE_OUT	deamon/endn_deamon.h	18;"	d
+PIPE_OUT	deamon/endn_deamon.h	19;"	d
 PIPE_OUT	endndc/endndc.cpp	4;"	d	file:
 PIT	table/pit.cpp	/^PIT::PIT(){$/;"	f	class:PIT
 PIT	table/pit.h	/^class PIT$/;"	c
@@ -85,7 +85,7 @@ Pit_Map	table/pit_map.cpp	/^Pit_Map::Pit_Map(){$/;"	f	class:Pit_Map
 Pit_Map	table/pit_map.h	/^class Pit_Map$/;"	c
 Pit_Tire	table/pit_tire.cpp	/^Pit_Tire::Pit_Tire(){$/;"	f	class:Pit_Tire
 Pit_Tire	table/pit_tire.h	/^class Pit_Tire$/;"	c
-QUEUE_SZ	common/r_queue.h	5;"	d
+QUEUE_SZ	common/r_queue.h	6;"	d
 RQueue	face/face.h	11;"	d
 R_Queue	common/r_queue.cpp	/^R_Queue::R_Queue(){$/;"	f	class:R_Queue
 R_Queue	common/r_queue.h	/^class R_Queue$/;"	c
@@ -147,8 +147,8 @@ add	table/fib.cpp	/^void FIB::add(const char *name , int face_id) {$/;"	f	class:
 add	table/fib_map.cpp	/^void Fib_Map::add(const char *name , int face_id){$/;"	f	class:Fib_Map
 add	table/pit.cpp	/^void PIT::add(char *name , int face_id) {$/;"	f	class:PIT
 add	table/pit_map.cpp	/^void Pit_Map::add(char *name , int face_id){$/;"	f	class:Pit_Map
-add2chrq	face/face.cpp	/^int Face::add2chrq(char *data , int &len){$/;"	f	class:Face
-add2chsq	face/face.cpp	/^int Face::add2chsq(char *data , int &len){$/;"	f	class:Face
+add2chrq	face/face.cpp	/^int Face::add2chrq(char *data , int len){$/;"	f	class:Face
+add2chsq	face/face.cpp	/^int Face::add2chsq(char *data , int len){$/;"	f	class:Face
 add_ether_face	deamon/flist.cpp	/^int FList::add_ether_face(string &if_name, uint8_t *s_mac ){$/;"	f	class:FList
 add_face	table/pit_tire.h	/^	void add_face(int face_id){$/;"	f	struct:pit_node_t
 add_faceid	table/fib_map.h	/^	void add_faceid(int face_id){$/;"	f	struct:fib_map_vt
@@ -165,15 +165,23 @@ childs	table/tire.h	/^	forward_list<struct t_node_t> childs;$/;"	m	struct:fib_no
 component	table/pit_tire.h	/^	char *component ;  \/\/ remember to free$/;"	m	struct:pit_node_t
 component	table/tire.h	/^	char *component ;$/;"	m	struct:fib_node_t
 component	table/tire.h	/^	char *component ;$/;"	m	struct:pit_node_t
+content	userapi/edata.h	/^	char *content ;$/;"	m	class:EData
+content	userapi/einterest.h	/^	char *content ;$/;"	m	class:EInterest
+count	example/server.cpp	/^static int count = 0 ;$/;"	v	file:
 d_mac	face/ether_channel.h	/^	uint8_t d_mac[6] ;$/;"	m	class:Ether_Channel
 daddr	face/face.h	/^	string daddr ;$/;"	m	class:Face
 daddr	userapi/edata.h	/^	string daddr ;$/;"	m	class:EData
 data	userapi/packet.h	/^	char *data;$/;"	m	struct:packet_t
 decode_name	common/globle_var.cpp	/^string decode_name(const char *name ) {$/;"	f
+decode_name	userapi/packet.h	/^static string decode_name(const uint8_t *name ) {$/;"	f
 delete_tire	table/pit_tire.cpp	/^void delete_tire(struct pit_node_t* node_p){$/;"	f
+eface	example/client.cpp	/^static EFace eface ;$/;"	v	file:
+eface	example/server.cpp	/^static EFace eface ;$/;"	v	file:
 ename	userapi/einterest.h	/^	EName &ename ;$/;"	m	class:EInterest
 encode_name	common/globle_var.cpp	/^uint16_t encode_name(char *buff , const string &name) {$/;"	f
+encode_name	userapi/packet.h	/^static uint16_t encode_name(uint8_t *buff , const string &name) {$/;"	f
 enpacket	userapi/packet.h	/^static uint16_t enpacket(char *buff , const string &name, uint8_t type){$/;"	f
+ether_recvs	deamon/endn_deamon.h	/^	Ether_RecvS ether_recvs ;$/;"	m	class:Endn_Deamon
 exec_cmd	deamon/endn_deamon.cpp	/^int Endn_Deamon::exec_cmd(string cmd ){$/;"	f	class:Endn_Deamon
 expire_time	table/pit_map.h	/^	int expire_time ;$/;"	m	struct:pit_map_vt
 expire_time	table/pit_tire.h	/^	int expire_time ;  \/\/ $/;"	m	struct:pit_node_t
@@ -194,10 +202,14 @@ fib_map_vt	table/fib_map.h	/^struct fib_map_vt{$/;"	s
 fib_node_t	table/tire.h	/^struct fib_node_t{$/;"	s
 filter_str	userapi/eface.h	/^	struct packet_t * filter_str ;$/;"	m	class:EFace	typeref:struct:EFace::packet_t
 flist	deamon/flist.h	/^	Face *flist[FLIST_SZ] ;$/;"	m	class:FList
+forward	face/face.cpp	/^void *Face::forward(void *param){$/;"	f	class:Face
 full_name	table/pit_tire.h	/^	char *full_name ;  \/\/ remember to free$/;"	m	struct:pit_node_t
 full_name_len	table/pit_tire.h	/^	int full_name_len ;$/;"	m	struct:pit_node_t
+getContent	userapi/edata.cpp	/^string EData::getContent() const {$/;"	f	class:EData
+getContent	userapi/einterest.cpp	/^string EInterest::getContent() const {$/;"	f	class:EInterest
 getData	userapi/ename.cpp	/^string EName::getData(){$/;"	f	class:EName
-getName	userapi/einterest.cpp	/^string EInterest::getName(){$/;"	f	class:EInterest
+getName	userapi/edata.cpp	/^string EData::getName() const{$/;"	f	class:EData
+getName	userapi/einterest.cpp	/^string EInterest::getName() const {$/;"	f	class:EInterest
 get_cdata_len	common/r_queue.cpp	/^int R_Queue::get_cdata_len(){$/;"	f	class:R_Queue
 get_cfree_space	common/r_queue.cpp	/^int R_Queue::get_cfree_space(){$/;"	f	class:R_Queue
 get_data_len	common/r_queue.cpp	/^int R_Queue::get_data_len(){$/;"	f	class:R_Queue
@@ -211,16 +223,18 @@ get_head_p	common/r_queue.cpp	/^char *R_Queue::get_head_p(){$/;"	f	class:R_Queue
 get_ifs	deamon/ether_recvs.cpp	/^void Ether_RecvS::get_ifs(){$/;"	f	class:Ether_RecvS
 get_ndata	common/r_queue.cpp	/^int R_Queue::get_ndata(int start , char *data ,int n ){$/;"	f	class:R_Queue
 get_new_fid	deamon/flist.cpp	/^int FList::get_new_fid(){$/;"	f	class:FList
-get_packet	userapi/edata.cpp	/^int EData::get_packet(char *data){$/;"	f	class:EData
+get_packet	userapi/edata.cpp	/^int EData::get_packet(char* &data){$/;"	f	class:EData
 get_packet	userapi/einterest.cpp	/^int EInterest::get_packet(char* &data){$/;"	f	class:EInterest
 get_rear	common/r_queue.cpp	/^int R_Queue::get_rear(){$/;"	f	class:R_Queue
 get_rear_p	common/r_queue.cpp	/^char *R_Queue::get_rear_p(){$/;"	f	class:R_Queue
+get_saddr	userapi/einterest.cpp	/^string EInterest::get_saddr() const {$/;"	f	class:EInterest
 get_sockfd	userapi/eface.cpp	/^int get_sockfd(){$/;"	f
 get_state	face/face.h	/^	enum FACE_STATE get_state(){$/;"	f	class:Face
 get_table	table/fib.cpp	/^string FIB::get_table(){$/;"	f	class:FIB
 get_table	table/fib_map.cpp	/^string Fib_Map::get_table(){$/;"	f	class:Fib_Map
 has_content	userapi/edata.h	/^	bool has_content ;$/;"	m	class:EData
 has_content	userapi/einterest.h	/^	bool has_content ;$/;"	m	class:EInterest
+has_data	common/r_queue.h	/^	pthread_cond_t has_data ;$/;"	m	class:R_Queue
 head	common/r_queue.h	/^	int head ;$/;"	m	class:R_Queue
 if_fs	deamon/ether_recvs.h	/^	int if_fs[MAX_IF] ;$/;"	m	class:Ether_RecvS
 if_name	face/ether_channel.h	/^	string if_name ;$/;"	m	class:Ether_Channel
@@ -248,11 +262,12 @@ m_flist	deamon/tcp_server.h	/^	FList *m_flist ;$/;"	m	class:Tcp_Server
 m_flist	deamon/usocket_server.h	/^	FList *m_flist ;$/;"	m	class:USocket_Server
 m_flist	face/face.h	/^	FList *m_flist ;$/;"	m	class:Face
 m_flist	main.cpp	/^FList * FList::m_flist = NULL ;$/;"	m	class:FList	file:
+m_mutex	common/r_queue.h	/^	pthread_mutex_t m_mutex ;$/;"	m	class:R_Queue
 m_pit	deamon/endn_deamon.h	/^	PIT *m_pit ;$/;"	m	class:Endn_Deamon
 m_pit	face/face.h	/^	PIT *m_pit ;$/;"	m	class:Face
 m_pit	main.cpp	/^PIT * PIT::m_pit = NULL ;$/;"	m	class:PIT	file:
 m_pit	table/pit.h	/^	static PIT *m_pit ;$/;"	m	class:PIT
-m_recv	userapi/eface.cpp	/^void EFace::m_recv(){$/;"	f	class:EFace
+m_recv	userapi/eface.cpp	/^int EFace::m_recv(uint8_t *buff , int buff_len , int start){$/;"	f	class:EFace
 m_state	face/face.h	/^	enum FACE_STATE m_state ;$/;"	m	class:Face	typeref:enum:Face::FACE_STATE
 m_tid	deamon/ether_recvs.h	/^	pthread_t m_tid ;$/;"	m	class:Ether_RecvS
 main	endndc/endndc.cpp	/^int main(int argc , char **argv)$/;"	f
@@ -291,14 +306,12 @@ pit_node_t	table/pit_tire.h	/^struct pit_node_t{$/;"	s
 pit_node_t	table/tire.h	/^struct pit_node_t{$/;"	s
 processEvents	userapi/eface.cpp	/^void EFace::processEvents() {$/;"	f	class:EFace
 push_ndata	common/r_queue.cpp	/^int R_Queue::push_ndata(char *data , int n){$/;"	f	class:R_Queue
-put	userapi/eface.cpp	/^void EFace::put(EData &data){$/;"	f	class:EFace
-rd_mutex	face/channel.h	/^	pthread_mutex_t rd_mutex ;   \/\/ 以上条件变量的互斥锁$/;"	m	class:Channel
+put	userapi/eface.cpp	/^void EFace::put(EData &edata){$/;"	f	class:EFace
 rear	common/r_queue.h	/^	int rear ;$/;"	m	class:R_Queue
 recur_search	table/fib_map.cpp	/^map<string, struct fib_map_vt*>::iterator Fib_Map::recur_search(const char *name ,$/;"	f	class:Fib_Map
 recv	deamon/ether_recvs.cpp	/^void *Ether_RecvS::recv(void *param){$/;"	f	class:Ether_RecvS
 recv	face/tcp_channel.cpp	/^void* Tcp_Channel::recv(void *para)$/;"	f	class:Tcp_Channel
 recv_cmd	deamon/endn_deamon.cpp	/^void Endn_Deamon::recv_cmd(){$/;"	f	class:Endn_Deamon
-recv_data	face/channel.h	/^	pthread_cond_t recv_data ;   \/\/ 接收数据等待，条件变量$/;"	m	class:Channel
 recv_td	face/channel.h	/^	pthread_t recv_td ;$/;"	m	class:Channel
 remove	table/fib.cpp	/^void FIB::remove(const char *name) {$/;"	f	class:FIB
 remove	table/fib_map.cpp	/^void Fib_Map::remove(const char *name){$/;"	f	class:Fib_Map
@@ -314,8 +327,6 @@ run	deamon/tcp_server.cpp	/^void* Tcp_Server::run(void *param){$/;"	f	class:Tcp_
 run	deamon/usocket_server.cpp	/^void *USocket_Server::run(void *param){$/;"	f	class:USocket_Server
 s_add_tcp_face	deamon/flist.cpp	/^int FList::s_add_tcp_face(const char *cip , int sockfd){$/;"	f	class:FList
 s_mac	face/ether_channel.h	/^	uint8_t s_mac[6] ;$/;"	m	class:Ether_Channel
-sd_mutex	face/channel.h	/^	pthread_mutex_t sd_mutex ;   \/\/ 以上条件变量的互斥锁$/;"	m	class:Channel
-search	face/face.cpp	/^void *Face::search(void *param){$/;"	f	class:Face
 search	table/fib.cpp	/^vector<int> FIB::search(const char *name ) {$/;"	f	class:FIB
 search	table/fib_map.cpp	/^vector<int> Fib_Map::search(const char *name) {$/;"	f	class:Fib_Map
 search	table/pit.cpp	/^vector<int> PIT::search(char *name ) {$/;"	f	class:PIT
@@ -324,20 +335,21 @@ search	table/pit_tire.cpp	/^void Pit_Tire::search(char *name , int type, forward
 send	face/ether_channel.cpp	/^void *Ether_Channel::send(void *param){$/;"	f	class:Ether_Channel
 send	face/tcp_channel.cpp	/^void* Tcp_Channel::send(void *para){$/;"	f	class:Tcp_Channel
 send	userapi/eface.cpp	/^void *EFace::send(void *param){$/;"	f	class:EFace
-send2face	face/face.cpp	/^int Face::send2face(vector<int> &face_list , int &clen){$/;"	f	class:Face
+send2face	face/face.cpp	/^int Face::send2face(vector<int> &face_list , int clen){$/;"	f	class:Face
 send_cmd	endndc/endndc.cpp	/^int send_cmd(const string cmd){$/;"	f
 send_cmd	userapi/eface.cpp	/^void send_cmd(struct packet_t *filter , int sockfd){$/;"	f
-send_data	face/channel.h	/^	pthread_cond_t send_data ;   \/\/ 接收数据等待，条件变量$/;"	m	class:Channel
 send_data	userapi/eface.h	/^	pthread_cond_t send_data ;  \/\/ 发送队列中有数据，条件变量$/;"	m	class:EFace
+send_packet	example/client.cpp	/^void *send_packet(void *param){$/;"	f
 send_q	userapi/eface.h	/^	queue<struct packet_t*> send_q ;$/;"	m	class:EFace
 send_q_mutex	userapi/eface.h	/^	pthread_mutex_t send_q_mutex ;   \/\/ 发送队列读写锁$/;"	m	class:EFace
 send_td	face/channel.h	/^	pthread_t send_td ;$/;"	m	class:Channel
+setContent	userapi/edata.cpp	/^void EData::setContent(const char* content , int c_len){$/;"	f	class:EData
 setContent	userapi/edata.cpp	/^void EData::setContent(const uint8_t* content , int c_len){$/;"	f	class:EData
+setContent	userapi/einterest.cpp	/^void EInterest::setContent(const char* content , int c_len){$/;"	f	class:EInterest
 setContent	userapi/einterest.cpp	/^void EInterest::setContent(const uint8_t* content , int c_len){$/;"	f	class:EInterest
 setInterestFilter	userapi/eface.cpp	/^void EFace::setInterestFilter(string prefix , $/;"	f	class:EFace
 setInterestLifetime	userapi/einterest.cpp	/^void EInterest::setInterestLifetime(){$/;"	f	class:EInterest
 set_saddr	userapi/eface.cpp	/^void EFace::set_saddr(string prefix , void(*onData)(const EData&) ){$/;"	f	class:EFace
-set_sockfd	face/channel.cpp	/^void Channel::set_sockfd(int sockfd){$/;"	f	class:Channel
 show_face_usage	endndc/endndc.cpp	/^void show_face_usage(){$/;"	f
 show_route_usage	endndc/endndc.cpp	/^void show_route_usage(){$/;"	f
 show_usage	endndc/endndc.cpp	/^void show_usage(){$/;"	f
@@ -359,12 +371,14 @@ stop	deamon/ether_recvs.cpp	/^void Ether_RecvS::stop(){$/;"	f	class:Ether_RecvS
 stop	deamon/tcp_server.cpp	/^void Tcp_Server::stop(){$/;"	f	class:Tcp_Server
 stop	deamon/usocket_server.cpp	/^void USocket_Server::stop(){$/;"	f	class:USocket_Server
 stop	face/channel.cpp	/^void Channel::stop(){$/;"	f	class:Channel
+stop	face/ether_channel.cpp	/^void Ether_Channel::stop(){$/;"	f	class:Ether_Channel
 stop	face/face.cpp	/^void Face::stop(){$/;"	f	class:Face
 stop	face/tcp_channel.cpp	/^void Tcp_Channel::stop(){$/;"	f	class:Tcp_Channel
 update	deamon/endn_deamon.cpp	/^void Endn_Deamon::update(){$/;"	f	class:Endn_Deamon
 update	table/fib.cpp	/^void FIB::update(){$/;"	f	class:FIB
 update	table/pit.cpp	/^void PIT::update(){$/;"	f	class:PIT
 update	table/pit_map.cpp	/^void Pit_Map::update(){$/;"	f	class:Pit_Map
+wait4data	common/r_queue.cpp	/^void R_Queue::wait4data() {$/;"	f	class:R_Queue
 ~Channel	face/channel.cpp	/^Channel::~Channel(){$/;"	f	class:Channel
 ~EData	userapi/edata.cpp	/^EData::~EData(){$/;"	f	class:EData
 ~EFace	userapi/eface.cpp	/^EFace::~EFace(){$/;"	f	class:EFace
