@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 
-#define EXPIRE_T 300   // expire time
+#define EXPIRE_T 3000   // expire time
 using std::map ;
 using std::pair ;
 using std::vector ;

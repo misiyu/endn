@@ -27,6 +27,8 @@ void Endn_Deamon::update(){
 Endn_Deamon::~Endn_Deamon(){
 }
 
+
+// 执行控制台发来的程序
 int Endn_Deamon::exec_cmd(string cmd ){
 	Json::Reader reader ;
 	Json::Value root ;
@@ -80,10 +82,30 @@ int Endn_Deamon::exec_cmd(string cmd ){
 				}
 				int new_face = m_flist->c_add_tcp_face(sip.data() , port) ;
 				cmd_result << "face-create id=" << new_face << 
-					"remote="<<remote_url ;
+					" remote="<<remote_url ;
 				
 			}else if(remote_url[0] == 'e'){
-
+				string local_dev = root["local_dev"].asString() ;
+				int idx1 = local_dev.find(':',0) +3;
+				local_dev = local_dev.substr(idx1 , local_dev.size() - idx1) ;
+				cout << "local_dev = " << local_dev << endl ;
+				int if_idx = if_nametoindex(local_dev.data()) ;
+				if(if_idx == 0){
+					cmd_result << "there is not interface named "<< local_dev ;
+				}else{
+					idx1 = remote_url.find(':',0)+3 ;
+					string dmac_str = remote_url.substr(idx1 , 
+							remote_url.size()-idx1) ;
+					uint8_t dmac[6] ;
+					int itmp ;
+					for (int i = 0; i < 6; i++) {
+						sscanf(dmac_str.data()+i*3 ,"%x" , &itmp ) ;
+						dmac[i] = itmp ;
+						cout << "itmp = " << itmp << endl ;
+					}
+					m_flist->flist[if_idx]->set_dmac(dmac);
+					cmd_result << "add face success" ;
+				}
 			}
 		}else if(cmd2 == "remove"){
 

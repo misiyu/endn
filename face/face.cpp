@@ -26,7 +26,9 @@ Face::Face(const char *dip , int sockfd, int face_id){
 //		  s_mac  网卡的mac地址
 //		  face_id  face index in the flist
 Face::Face(string &if_name, const uint8_t* s_mac , int face_id){
-	daddr = if_name ;
+	char dmac[20] ;
+	//sprintf(dmac , "%.2x" , s_mac)
+	daddr = if_name + " -> 01:00:5e:00:17:aa" ;
 	this->face_id = face_id ;
 	mchannel = new Ether_Channel(if_name,s_mac) ;
 	m_fib = FIB::GetInstance() ;
@@ -68,7 +70,7 @@ int Face::send2face(vector<int> &face_list , int clen){
 // 参数： data  buffer指针
 //			len 数据长度
 int Face::add2chsq(char *data , int len){
-	cout << "face : send to send queue " << endl ;
+	//cout << "face : send to send queue " << endl ;
 	this->mchannel->msqueue.push_ndata(data,len);
 }
 
@@ -77,6 +79,18 @@ int Face::add2chsq(char *data , int len){
 //			len 数据长度
 int Face::add2chrq(char *data , int len){
 	this->mchannel->mrqueue.push_ndata(data,len);
+}
+
+void Face::set_dmac(const uint8_t *dmac) {
+	printf("face set_dmac dmac = %p\n" , dmac) ;
+	this->mchannel->set_dmac(dmac) ;
+	char dmac_str[20];
+	for (int i = 0; i < 5; i++) {
+		sprintf(dmac_str+i*3,"%.2x:",dmac[i]);
+	}
+	sprintf(dmac_str+15,"%.2x",dmac[5]) ;
+	int idx1 = this->daddr.find('>',0) ;
+	daddr = daddr.substr(0,idx1+1)+" "+dmac_str ;
 }
 
 
@@ -95,37 +109,46 @@ void *Face::forward(void *param){
 		 *wait for data , if receive queue is empty then wait 
 		 *under the condition variant 
 		 */
-		cout << "Face::forward packet ================ " << get_p_count <<  endl ;
+		if(_this->mchannel->get_state() == 0){
+			cout << "close face " << _this->daddr << endl ;
+			_this->m_state = DEAD ;
+			break ;
+		}
+		//cout << "Face::forward packet ================ " << get_p_count <<  endl ;
 		while(  RQueue.get_data_len() < 6 ) ; 
 		uint16_t name_len = 0 ;
-		RQueue.get_ndata(RQueue.get_head()+4,(char*)&name_len,2);
-		//cout << "face packet name_len = " << name_len << endl ;
-		cout << "buff data total len = " <<  RQueue.get_data_len() << endl ;
+		int rq_head = RQueue.get_head() ;
+		RQueue.get_ndata(rq_head + 4,(char*)&name_len,2);
+		//cout << "buff data total len = " <<  RQueue.get_data_len() << endl ;
 		while( name_len+6 > RQueue.get_data_len() ) ; 
 		char name[MAX_NAME_LEN];
-		RQueue.get_ndata(RQueue.get_head()+3 , name , name_len+3);
+		cout << "faceid = " << _this->face_id<<" face packet name_len = " << name_len << endl ;
+		if(name_len == 0){
+			exit(1) ;
+		}
+		RQueue.get_ndata(rq_head + 3 , name , name_len+3);
 		// 获得数据包名称: 两层 TLV 格式
 		uint16_t packet_len = 0 ;
-		RQueue.get_ndata(RQueue.get_head()+1,(char*)&packet_len,2) ;
+		RQueue.get_ndata(rq_head + 1,(char*)&packet_len,2) ;
 		packet_len += 3 ;
 
-		cout << "Face::search pkt len = " << packet_len << endl ;
+		//cout << "Face::search pkt len = " << packet_len << endl ;
 
 		vector<int> face_list ;
 		
 		uint8_t p_type ;
-		RQueue.get_ndata(RQueue.get_head(),(char*)&p_type,1) ;
+		RQueue.get_ndata(rq_head , (char*)&p_type,1) ;
 		if(p_type == 0x5) {
 			while(RQueue.get_data_len() < 9+name_len ) ; 
-			RQueue.get_ndata(RQueue.get_head()+7+name_len,(char*)&saddr_len,2) ;
+			RQueue.get_ndata(rq_head + 7+name_len,(char*)&saddr_len,2) ;
 			while(RQueue.get_data_len() < 9+name_len+saddr_len ) ; 
-			RQueue.get_ndata(RQueue.get_head()+6+name_len,saddr, saddr_len+3) ;
+			RQueue.get_ndata(rq_head + 6+name_len,saddr, saddr_len+3) ;
 			_this->m_pit->add(saddr , _this->face_id) ;
 			face_list = _this->m_fib->search(name) ;
 			//cout<<"fib match face list size = "<<face_list.size() << endl ;
 		}else{
 			face_list = _this->m_pit->search(name) ;
-			//cout<<"pit match face list size = "<<face_list.size() << endl ;
+			cout<<"pit match face list size = "<<face_list.size() << endl ;
 		}
 
 		//cout << "face search pkt len = " << packet_len << endl ;
@@ -143,8 +166,7 @@ void *Face::forward(void *param){
 		}else{
 			RQueue.rmv_n(packet_len) ;
 		}
-		cout << "face get packet ==================== " << get_p_count++ <<  endl ;
-		//exit(0) ;
+		//cout << "face get packet ==================== " << get_p_count++ <<  endl ;
 	}
 
 }

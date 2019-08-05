@@ -76,16 +76,16 @@ OBJ_DIR	endndc/makefile	/^OBJ_DIR = .\/objs$/;"	m
 OBJ_DIR	example/makefile	/^OBJ_DIR = .\/objs$/;"	m
 OBJ_DIR	makefile	/^OBJ_DIR = .\/objs$/;"	m
 PIPE_IN	deamon/endn_deamon.h	20;"	d
-PIPE_IN	endndc/endndc.cpp	5;"	d	file:
+PIPE_IN	endndc/endndc.cpp	6;"	d	file:
 PIPE_OUT	deamon/endn_deamon.h	19;"	d
-PIPE_OUT	endndc/endndc.cpp	4;"	d	file:
+PIPE_OUT	endndc/endndc.cpp	5;"	d	file:
 PIT	table/pit.cpp	/^PIT::PIT(){$/;"	f	class:PIT
 PIT	table/pit.h	/^class PIT$/;"	c
 Pit_Map	table/pit_map.cpp	/^Pit_Map::Pit_Map(){$/;"	f	class:Pit_Map
 Pit_Map	table/pit_map.h	/^class Pit_Map$/;"	c
 Pit_Tire	table/pit_tire.cpp	/^Pit_Tire::Pit_Tire(){$/;"	f	class:Pit_Tire
 Pit_Tire	table/pit_tire.h	/^class Pit_Tire$/;"	c
-QUEUE_SZ	common/r_queue.h	6;"	d
+QUEUE_SZ	common/r_queue.h	7;"	d
 RQueue	face/face.h	11;"	d
 R_Queue	common/r_queue.cpp	/^R_Queue::R_Queue(){$/;"	f	class:R_Queue
 R_Queue	common/r_queue.h	/^class R_Queue$/;"	c
@@ -149,7 +149,7 @@ add	table/pit.cpp	/^void PIT::add(char *name , int face_id) {$/;"	f	class:PIT
 add	table/pit_map.cpp	/^void Pit_Map::add(char *name , int face_id){$/;"	f	class:Pit_Map
 add2chrq	face/face.cpp	/^int Face::add2chrq(char *data , int len){$/;"	f	class:Face
 add2chsq	face/face.cpp	/^int Face::add2chsq(char *data , int len){$/;"	f	class:Face
-add_ether_face	deamon/flist.cpp	/^int FList::add_ether_face(string &if_name, uint8_t *s_mac ){$/;"	f	class:FList
+add_ether_face	deamon/flist.cpp	/^int FList::add_ether_face(string &if_name, uint8_t *s_mac , int faceid){$/;"	f	class:FList
 add_face	table/pit_tire.h	/^	void add_face(int face_id){$/;"	f	struct:pit_node_t
 add_faceid	table/fib_map.h	/^	void add_faceid(int face_id){$/;"	f	struct:fib_map_vt
 add_faceid	table/pit_map.h	/^	void add_faceid(int face_id){$/;"	f	struct:pit_map_vt
@@ -181,6 +181,7 @@ ename	userapi/einterest.h	/^	EName &ename ;$/;"	m	class:EInterest
 encode_name	common/globle_var.cpp	/^uint16_t encode_name(char *buff , const string &name) {$/;"	f
 encode_name	userapi/packet.h	/^static uint16_t encode_name(uint8_t *buff , const string &name) {$/;"	f
 enpacket	userapi/packet.h	/^static uint16_t enpacket(char *buff , const string &name, uint8_t type){$/;"	f
+ether_p	face/ether_channel.h	/^	char ether_p[MTU+14] ;$/;"	m	class:Ether_Channel
 ether_recvs	deamon/endn_deamon.h	/^	Ether_RecvS ether_recvs ;$/;"	m	class:Endn_Deamon
 exec_cmd	deamon/endn_deamon.cpp	/^int Endn_Deamon::exec_cmd(string cmd ){$/;"	f	class:Endn_Deamon
 expire_time	table/pit_map.h	/^	int expire_time ;$/;"	m	struct:pit_map_vt
@@ -229,14 +230,15 @@ get_rear	common/r_queue.cpp	/^int R_Queue::get_rear(){$/;"	f	class:R_Queue
 get_rear_p	common/r_queue.cpp	/^char *R_Queue::get_rear_p(){$/;"	f	class:R_Queue
 get_saddr	userapi/einterest.cpp	/^string EInterest::get_saddr() const {$/;"	f	class:EInterest
 get_sockfd	userapi/eface.cpp	/^int get_sockfd(){$/;"	f
+get_state	face/channel.cpp	/^int Channel::get_state(){$/;"	f	class:Channel
 get_state	face/face.h	/^	enum FACE_STATE get_state(){$/;"	f	class:Face
 get_table	table/fib.cpp	/^string FIB::get_table(){$/;"	f	class:FIB
 get_table	table/fib_map.cpp	/^string Fib_Map::get_table(){$/;"	f	class:Fib_Map
 has_content	userapi/edata.h	/^	bool has_content ;$/;"	m	class:EData
 has_content	userapi/einterest.h	/^	bool has_content ;$/;"	m	class:EInterest
 has_data	common/r_queue.h	/^	pthread_cond_t has_data ;$/;"	m	class:R_Queue
+has_space	common/r_queue.h	/^	pthread_cond_t has_space ;$/;"	m	class:R_Queue
 head	common/r_queue.h	/^	int head ;$/;"	m	class:R_Queue
-if_fs	deamon/ether_recvs.h	/^	int if_fs[MAX_IF] ;$/;"	m	class:Ether_RecvS
 if_name	face/ether_channel.h	/^	string if_name ;$/;"	m	class:Ether_Channel
 insert	table/pit_tire.cpp	/^Pit_Tire::insert(char *name ,int face_id){$/;"	f	class:Pit_Tire
 insert_tire	table/pit_tire.cpp	/^void insert_tire(struct pit_node_t* node_p , char *sub_name , int len $/;"	f
@@ -349,6 +351,9 @@ setContent	userapi/einterest.cpp	/^void EInterest::setContent(const char* conten
 setContent	userapi/einterest.cpp	/^void EInterest::setContent(const uint8_t* content , int c_len){$/;"	f	class:EInterest
 setInterestFilter	userapi/eface.cpp	/^void EFace::setInterestFilter(string prefix , $/;"	f	class:EFace
 setInterestLifetime	userapi/einterest.cpp	/^void EInterest::setInterestLifetime(){$/;"	f	class:EInterest
+set_dmac	face/channel.cpp	/^void Channel::set_dmac(const uint8_t *d_mac){$/;"	f	class:Channel
+set_dmac	face/ether_channel.cpp	/^void Ether_Channel::set_dmac(const uint8_t *dmac){$/;"	f	class:Ether_Channel
+set_dmac	face/face.cpp	/^void Face::set_dmac(const uint8_t *dmac) {$/;"	f	class:Face
 set_saddr	userapi/eface.cpp	/^void EFace::set_saddr(string prefix , void(*onData)(const EData&) ){$/;"	f	class:EFace
 show_face_usage	endndc/endndc.cpp	/^void show_face_usage(){$/;"	f
 show_route_usage	endndc/endndc.cpp	/^void show_route_usage(){$/;"	f
@@ -379,6 +384,7 @@ update	table/fib.cpp	/^void FIB::update(){$/;"	f	class:FIB
 update	table/pit.cpp	/^void PIT::update(){$/;"	f	class:PIT
 update	table/pit_map.cpp	/^void Pit_Map::update(){$/;"	f	class:Pit_Map
 wait4data	common/r_queue.cpp	/^void R_Queue::wait4data() {$/;"	f	class:R_Queue
+wait4space	common/r_queue.cpp	/^void R_Queue::wait4space() {$/;"	f	class:R_Queue
 ~Channel	face/channel.cpp	/^Channel::~Channel(){$/;"	f	class:Channel
 ~EData	userapi/edata.cpp	/^EData::~EData(){$/;"	f	class:EData
 ~EFace	userapi/eface.cpp	/^EFace::~EFace(){$/;"	f	class:EFace

@@ -65,7 +65,7 @@ void EFace::set_saddr(string prefix , void(*onData)(const EData&) ){
 int EFace::m_recv(uint8_t *buff , int buff_len , int start){
 	int rlen = start ;
 	rlen += read(sockfd, buff+start, buff_len-start);   
-	cout << "EFace::m_recv recv data len = " << rlen << endl ;
+	//cout << "EFace::m_recv recv data len = " << rlen << endl ;
 	if(rlen <= 0) exit(1) ;
 	uint16_t p_len = *((uint16_t*)(buff+1)) +3;
 	while(rlen < p_len){
@@ -121,11 +121,11 @@ void EFace::p_recv(){
 
 		pkt_len = *((uint16_t*)(buff+1)) + 3 ; 
 		i = 0 ;
-		cout << "EFace::p_recv data len = " << start << endl ;
+		//cout << "EFace::p_recv data len = " << start << endl ;
 		while(i + pkt_len <= start){
-			cout << "EFace::p_recv pkt len = " << pkt_len << endl ;
+			//cout << "EFace::p_recv pkt len = " << pkt_len << endl ;
 			string name1 = decode_name(buff+i+3) ;
-			cout << "name1 = " << name1 << endl ;
+			//cout << "name1 = " << name1 << endl ;
 			uint16_t name1_len = *((uint16_t*)(buff+i+4)) ;
 
 			string name2 = decode_name(buff+i+6+name1_len) ;
@@ -175,7 +175,7 @@ void EFace::processEvents() {
 
 void EFace::put(EData &edata){
 	struct packet_t *packet = new struct packet_t ;
-	printf("put data name = s\n" ) ;
+	//printf("put data name = s\n" ) ;
 	packet->len = edata.get_packet(packet->data);
 	bool need_signal = false ;
 	pthread_mutex_lock(&send_q_mutex);
@@ -216,7 +216,11 @@ void *EFace::send(void *param){
 			pthread_cond_wait(&(_this->send_data) , &(_this->send_q_mutex)) ;
 		}
 		pthread_mutex_unlock(&(_this->send_q_mutex)) ;
-		if(_this->state == 0) break ;
+		if(_this->state == 0) 
+		{
+			close(_this->sockfd) ;
+			break ;
+		}
 		int len = 0 ;
 
 		pthread_mutex_lock(&_this->send_q_mutex);
@@ -228,9 +232,6 @@ void *EFace::send(void *param){
 			len += pkt->len;
 		}
 		pthread_mutex_unlock(&_this->send_q_mutex);
-		//for (int i = 0; i < len; i++) {
-			//printf("%x ",send_buff[i]) ;
-		//}
 		int wlen = write(_this->sockfd, send_buff, len);   
 		//数据发送到ENDND 包转发进程 
 		cout << "send wlen = " << wlen << endl ;

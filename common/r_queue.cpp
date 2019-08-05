@@ -13,6 +13,10 @@ R_Queue::~R_Queue(){
 
 }
 int R_Queue::get_head(){
+	int ret = 0 ;
+	pthread_mutex_lock(&m_mutex) ;
+	ret = head ;
+	pthread_mutex_unlock(&m_mutex) ;
 	return head ;
 }
 int R_Queue::get_rear(){
@@ -52,7 +56,11 @@ char *R_Queue::get_rear_p(){
 }
 // 得到所有数据的长度
 int R_Queue::get_data_len(){
-	return (rear - head + QUEUE_SZ)%QUEUE_SZ ;
+	int ret =  0 ;
+	pthread_mutex_lock(&m_mutex) ;
+	ret = (rear - head + QUEUE_SZ)%QUEUE_SZ ;
+	pthread_mutex_unlock(&m_mutex) ;
+	return ret ;
 }
 // 得到空余长度
 int R_Queue::get_free_space(){
@@ -84,6 +92,7 @@ int R_Queue::get_cdata_len(){
 // copy n Byte data from buff to data 
 // 从start开始，往后取n字节数据
 int R_Queue::get_ndata(int start , char *data ,int n ){
+	//printf("&&&&&&&&&&&& = start = %d , n = %d \n",start , n );
 	if(start + n >= QUEUE_SZ){
 		memcpy(data,&buff[start],QUEUE_SZ-start);
 		memcpy(&data[QUEUE_SZ-start],buff,n+start-QUEUE_SZ);

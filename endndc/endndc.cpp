@@ -1,4 +1,5 @@
 #include <iostream>
+#include <regex>
 #include "endndc.h"
 
 #define PIPE_OUT "/tmp/endn_cmd_out"
@@ -22,6 +23,7 @@ int send_cmd(const string cmd){
 	memset(result,0,sizeof(result)) ;
 	if(access(PIPE_OUT , F_OK) == 0){
 		remove(PIPE_OUT) ;
+		unlink(PIPE_OUT) ;
 	}
 	if(mkfifo(PIPE_OUT, 0777) < 0){
 		printf("create named pipe failed\n");
@@ -52,7 +54,8 @@ void show_route_usage(){
 	exit(1) ;
 }
 void show_face_usage(){
-	cout << "./endndc face add <remove_url> " << endl ;
+	cout << "./endndc face add tcp://<IP> " << endl ;
+	cout << "./endndc face add ether://<MAC> dev://<if_name> " << endl ;
 	cout << "./endndc face remove [face id]" << endl ;
 	cout << "./endndc face list" << endl ;
 	exit(1) ;
@@ -94,11 +97,32 @@ void face_cmd(int argc , char **argv){
 	}else{
 		string cmd2 = argv[2] ;
 		root["cmd2"] = cmd2;
-		if(cmd2 == "add"){
-			if(argc != 4) show_face_usage() ;
+		if(cmd2 == "add"){   // face add
+			if(argc < 4) show_face_usage() ;
 			string remote_url = argv[3] ;
+			
+			regex remoteurl_regex1(
+					"tcp://([0-9]{1,3}\\.){3}[0-9]{1,3}");
+			regex remoteurl_regex2(
+					"ether://(([0-9]|[a-f]){2}:){5}([0-9]|[a-f]){2}");
 			root["remote_url"] = remote_url ;
-		}else if(cmd2 == "remove"){
+			if(regex_match(remote_url , remoteurl_regex1)){
+				
+			}else if(regex_match(remote_url, remoteurl_regex2)){
+				if(argc < 5) show_face_usage() ;
+				string local_dev = argv[4] ;
+				regex localdev_regex("dev://.*");
+				if(!regex_match(local_dev, localdev_regex)){
+					show_face_usage();
+					exit(0) ;
+				}
+				root["local_dev"] = local_dev ;
+			}else{
+				show_face_usage() ;
+				exit(0) ;
+			}
+		}  // face add end
+		else if(cmd2 == "remove"){
 			if(argc < 4) show_face_usage() ;
 			int face_id = atoi(argv[3]) ;
 			root["face_id"] = face_id ;

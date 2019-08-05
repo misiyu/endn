@@ -12,7 +12,7 @@ using std::string ;
 
 #include "common/globle_var.h"
 
-#define EXPIRE_T 300   // expire time s
+//#define EXPIRE_T 300   // expire time s
 
 struct fib_map_vt{
 	vector<int> face_list ;

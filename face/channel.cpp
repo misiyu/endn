@@ -26,3 +26,10 @@ void Channel::stop(){
 
 }
 
+int Channel::get_state(){
+	return this->state ;
+}
+
+void Channel::set_dmac(const uint8_t *d_mac){
+
+}

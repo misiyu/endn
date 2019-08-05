@@ -63,7 +63,6 @@ map<string, struct fib_map_vt*>::iterator Fib_Map::recur_search(const char *name
 vector<int> Fib_Map::search(const char *name) {
 	uint16_t name_len = *((uint16_t*)(name+1));
 	
-	//cout << "target " << endl ;
 	string target(name,name_len+3) ;
 	//cout << "target = " << target << endl ;
 	//cout << "table = "  << endl ;

@@ -22,6 +22,13 @@ void Ether_Channel::stop(){
 	printf("stop ethernet channel >>> \n");
 }
 
+
+void Ether_Channel::set_dmac(const uint8_t *dmac){
+	printf("Ether_Channel set_dmac dmac = %p\n" , dmac) ;
+	memcpy(this->d_mac,dmac,6) ;
+	memcpy(this->ether_p,dmac,6) ;
+}
+
 // 功能 : 初始化一个以太网socket ，初始化device结构
 // 参数： device 结构引用
 //			s_mac 源mac地址
@@ -57,7 +64,7 @@ void *Ether_Channel::send(void *param){
 	// 绑定一个网卡并获得一个sockfd 
 	sockfd = get_eth_sockfd(device , _this->s_mac , _this->if_name.data()) ;
 
-	char ether_p[MTU] ;
+	char *ether_p = _this->ether_p ;
 	memcpy(ether_p , _this->d_mac , 6) ;
 	memcpy(ether_p+6 , _this->s_mac , 6) ;
 	ether_p[12] = (NET_TYPE >> 8) ;
@@ -71,10 +78,10 @@ void *Ether_Channel::send(void *param){
 		cout << "ether channel "<< _this->if_name<<" send 发送数据  data len = "<< 
 			send_queue->get_data_len() << endl ;
 
-		int data_len = send_queue->get_cdata_len();
+		int cdata_len = send_queue->get_cdata_len();
 		char *buffp = send_queue->get_head_p();
-		int send_len = data_len ;
-		if(send_len > MTU) send_len = MTU ;
+		int send_len = cdata_len ;
+		if(send_len > MTU) send_len = MTU ;  // 1500
 		if(send_len <= 50) {
 			*((uint16_t*)(ether_p+14)) = send_len ;
 			memcpy(ether_p+16 , buffp , send_len) ;
@@ -90,6 +97,16 @@ void *Ether_Channel::send(void *param){
 		sendto(sockfd , ether_p , send_len , 0 ,
 				(struct sockaddr*)&(device),
 				sizeof(device)) ;
+		cdata_len -= send_len ;
+		while(cdata_len >= MTU){
+			cdata_len -= MTU ;
+			buffp += MTU ;
+			memcpy(ether_p+14 , buffp , MTU+14) ;
+			send_queue->rmv_n(MTU) ;
+			sendto(sockfd , ether_p , send_len , 0 ,
+					(struct sockaddr*)&(device),
+					sizeof(device)) ;
+		}
 	}
 	close(sockfd) ;
 }

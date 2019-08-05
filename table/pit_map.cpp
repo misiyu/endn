@@ -30,6 +30,13 @@ void Pit_Map::add(char *name , int face_id){
 vector<int> Pit_Map::search(char *name) {
 	uint16_t name_len = *((uint16_t*)(name+1));
 	string name_str(name,name_len+3);
+	cout << "Pit_Map::search name_len= " << name_len << " " << name_str ; 
+	if(name_len <= 0 ) exit(1) ;
+
+	for (int i = 0; i < 4; i++) {
+		printf("%x ",name[i]) ;
+	}
+	printf("\n") ;
 
 	// probe ======================================================
 	//cout << "target = " << name_str << endl ;

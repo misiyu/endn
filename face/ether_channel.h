@@ -25,6 +25,8 @@ public:
 	virtual ~Ether_Channel();
 	virtual void start() ;
 	virtual void stop() ;
+
+	void set_dmac(const uint8_t *dmac) ;
 	static void *send(void *param) ;
 
 private:
@@ -32,6 +34,8 @@ private:
 	uint8_t s_mac[6] ;
 	uint8_t d_mac[6] ;
 	string if_name ;
+	char ether_p[MTU+14] ;
+
 };
 
 #endif 

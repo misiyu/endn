@@ -45,6 +45,7 @@ public:
 		return this->m_state ;
 	}
 	~Face() ;
+	void set_dmac(const uint8_t *dmac) ;
 
 	enum FACE_STATE m_state ;
 	string daddr ;
