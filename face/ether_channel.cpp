@@ -97,13 +97,13 @@ void *Ether_Channel::send(void *param){
 		sendto(sockfd , ether_p , send_len , 0 ,
 				(struct sockaddr*)&(device),
 				sizeof(device)) ;
-		cdata_len -= send_len ;
+		cdata_len -= MTU ;
 		while(cdata_len >= MTU){
 			cdata_len -= MTU ;
 			buffp += MTU ;
-			memcpy(ether_p+14 , buffp , MTU+14) ;
+			memcpy(ether_p+14 , buffp , MTU) ;
 			send_queue->rmv_n(MTU) ;
-			sendto(sockfd , ether_p , send_len , 0 ,
+			sendto(sockfd , ether_p , MTU+14 , 0 ,
 					(struct sockaddr*)&(device),
 					sizeof(device)) ;
 		}

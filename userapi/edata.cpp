@@ -21,6 +21,15 @@ EData::EData(const string &daddr){
 	*((uint16_t*)&packet[1]) = packet_len-3 ;
 }
 
+EData::EData(const uint8_t* pkt , int pkt_len):
+	packet_len(pkt_len)
+{
+	memcpy(packet,pkt,pkt_len) ;
+	daddr = decode_name((uint8_t*)(packet+3)) ;
+	uint16_t daddr_len = *((uint16_t*)(packet+4)) ;
+	this->content = &packet[9+daddr_len] ;
+}
+
 // 
 // 功能： 装入应答包载荷
 // 参数：
@@ -33,12 +42,21 @@ void EData::setContent(const uint8_t* content , int c_len){
 		return ;
 	}
 	uint16_t mclen = c_len ;
+
+	uint8_t fhint[4] ;
+	packet_len-=4 ;
+	memcpy(fhint , &packet[packet_len],4) ;
+
 	packet[packet_len++] = 0x8 ;
 	*((uint16_t*)&packet[packet_len]) = mclen ;
 	packet_len += 2 ;
 	this->content = &packet[packet_len] ;
 	memcpy(&packet[packet_len], content ,mclen ) ;
 	packet_len += mclen ;
+
+	memcpy(&packet[packet_len],fhint,4) ;
+	packet_len += 4 ;
+
 	*((uint16_t*)&packet[1]) = packet_len-3 ;
 }
 void EData::setContent(const char* content , int c_len){

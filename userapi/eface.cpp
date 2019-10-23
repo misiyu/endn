@@ -62,6 +62,16 @@ void EFace::set_saddr(string prefix , void(*onData)(const EData&) ){
 	interestFilter.insert(pair<string , void*>(prefix , (void*)onData)) ;
 }
 
+/*
+ * brief :  从UNIX socket 中读出数据
+ * 
+ * param : 
+ *		buff : used to store the data 
+ *		buff_len : the size of buff 
+ *		start : begin from index buff[start] to write data
+ * 
+ * ret : the read data len in buff
+ */
 int EFace::m_recv(uint8_t *buff , int buff_len , int start){
 	int rlen = start ;
 	rlen += read(sockfd, buff+start, buff_len-start);   
@@ -85,12 +95,10 @@ void EFace::c_recv(){
 		pkt_len = *((uint16_t*)(buff+1)) + 3 ; 
 		i = 0 ;
 		while(i + pkt_len <= start){
-			string name = decode_name(buff+i+3) ;
-			uint16_t name_len = *((uint16_t*)(buff+i+4)) ;
-			EData edata(name) ;
-			uint16_t c_len = *((uint16_t*)(buff+i+11+name_len)) ;
-			edata.setContent(buff+i+13+name_len , c_len) ;
-			map<string,void*>::iterator it = interestFilter.find(name);
+
+			EData edata(buff+i,pkt_len) ;
+
+			map<string,void*>::iterator it = interestFilter.find(edata.getName());
 			if(it != interestFilter.end()){
 				onData = (void(*)(const EData&))(it->second) ;
 				onData(edata) ;
@@ -116,26 +124,16 @@ void EFace::p_recv(){
 	while(state){   // state == 1 时表示活跃
 		start = m_recv(buff , 20000, start) ;
 
-		//for(int j = 0 ; j < start ; j++) printf("%x ",buff[j]) ;
+		//cout << "start = " << start << endl ;
+		//for(int j = 0 ; j < start ; j++) printf("%d ",buff[j]) ;
 		//cout << endl ;
 
 		pkt_len = *((uint16_t*)(buff+1)) + 3 ; 
 		i = 0 ;
-		//cout << "EFace::p_recv data len = " << start << endl ;
 		while(i + pkt_len <= start){
-			//cout << "EFace::p_recv pkt len = " << pkt_len << endl ;
-			string name1 = decode_name(buff+i+3) ;
-			//cout << "name1 = " << name1 << endl ;
-			uint16_t name1_len = *((uint16_t*)(buff+i+4)) ;
+			EInterest einterest(buff+i , pkt_len) ;
 
-			string name2 = decode_name(buff+i+6+name1_len) ;
-			uint16_t name2_len = *((uint16_t*)(buff+i+7+name1_len)) ;
-
-			EName ename1(name1.data()) ;
-			EInterest einterest(ename1 , name2) ;
-			uint16_t c_len = *((uint16_t*)(buff+i+14+name1_len+name2_len)) ;
-			einterest.setContent(buff+i+16+name1_len + name2_len , c_len) ;
-			map<string,void*>::iterator it = interestFilter.find(name1);
+			map<string,void*>::iterator it = interestFilter.find(einterest.getName());
 			if(it != interestFilter.end()){
 				onInterest = (void(*)(const EInterest&))(it->second) ;
 				onInterest(einterest) ;
@@ -196,6 +194,16 @@ void EFace::shutdown(){
 	pthread_mutex_unlock(&send_q_mutex);
 }
 
+/*
+ * brief : 设置监听前缀，及该前缀对应的监听函数
+ * 
+ * param : 
+ *		prefix  要监听的前缀
+ *		onInterest 监听函数指针
+ * 
+ * ret : 
+ */
+
 void EFace::setInterestFilter(string prefix , 
 		void (*onInterest)(const EInterest &)){
 	this->face_type = 'p' ;
@@ -205,6 +213,14 @@ void EFace::setInterestFilter(string prefix ,
 			0x7);
 	filter_str->len += (prefix_len) ;
 }
+
+/*
+ * brief :  将send buffer 里的数据发送出去的线程
+ * 
+ * param : 
+ * 
+ * ret : 
+ */
 
 void *EFace::send(void *param){
 	EFace *_this = (EFace*)param ;

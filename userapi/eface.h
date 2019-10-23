@@ -12,7 +12,6 @@
 #include <stdlib.h>
 
 #include "einterest.h"
-#include "ename.h"
 #include "edata.h"
 
 #define USOCKET_ID "/tmp/ENDN_USOCKET"

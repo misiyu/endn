@@ -27,6 +27,10 @@ public:
 	void start() ;
 	void recv_cmd() ;
 	void update();
+private:
+	void route_cmd(std::stringstream &cmd_result, Json::Value &root) ;
+	void face_cmd(std::stringstream &cmd_result,  Json::Value &root) ;
+	void pit_cmd(std::stringstream &cmd_result,   Json::Value &root) ;
 
 private:
 	int exec_cmd(string cmd ) ;

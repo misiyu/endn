@@ -11,13 +11,13 @@ public:
 
 	// param :
 	// name : TLV format [T:1|L:2|V]  V ::= [T:1|L:2|v]
-	void add(char *name , int face_id) ;
+	void add(const char *name , const char* fhint) ;
 	
 	// ret:
 	//		face list 
-	vector<int> search(char *name ) ;
+	string search(const char *name ) ;
 
-	void remove(char *name) ;
+	void remove(const char *name) ;
 	void update();
 
 private:

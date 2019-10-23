@@ -6,7 +6,7 @@ using std::cout;
 using std::endl;
 
 static EFace eface ;
-const int send_num = 100000 ;
+const int send_num = 500 ;
 static int ondata_c = 0 ;
 struct timeval start , end ;
 void onData(const EData& edata){
@@ -41,8 +41,7 @@ int main()
 	string interest_name = "/daddr/002" ;	// 设置请求包名称
 	eface.set_saddr(source_addr,onData) ;  // 设置face接收的包名称
 
-	EName ename(interest_name.data()) ;
-	EInterest einterest(ename , source_addr) ;
+	EInterest einterest(interest_name , source_addr) ;
 	string content = "hello.";
 	char content1[8000] ;
 	memset(content1,'a' , 8000) ;

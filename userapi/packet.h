@@ -3,6 +3,7 @@
 
 #include <string.h>
 
+using std::string ;
 #define MAX_P_SZ 8400
 static uint16_t enpacket(char *buff , const string &name, uint8_t type){
 	uint16_t len = 3 ;

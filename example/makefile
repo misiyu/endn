@@ -5,11 +5,9 @@ OBJ_DIR = ./objs
 #SRC=$(wildcard $(SRC_DIR)/*.cpp)   
 
 SRC= ./client.cpp ../userapi/edata.cpp ../userapi/eface.cpp \
-	 ../userapi/einterest.cpp ../userapi/ename.cpp
-
+	 ../userapi/einterest.cpp 
 SRC2 = ./server.cpp ../userapi/edata.cpp ../userapi/eface.cpp \
-	 ../userapi/einterest.cpp ../userapi/ename.cpp
-
+	 ../userapi/einterest.cpp 
 OBJS := $(patsubst %.cpp, %.o,$(SRC))
 OBJ2 := $(patsubst %.cpp, %.o,$(SRC2))
 

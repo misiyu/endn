@@ -36,16 +36,17 @@ public:
 	~Pit_Map();
 	// param :
 	// name : TLV format [T:1|L:2|V]  V ::= [T:1|L:2|v]
-	void add(char *name , int face_id) ;
+	//void add(char *name , int face_id) ;
+	void add(const char *name , const char* fhint) ;
 	
 	// ret:
 	//		face list 
-	vector<int> search(char *name ) ;
-	void remove(char *name) ;
+	string search(const char *name ) ;
+	void remove(const char *name) ;
 	void update();
 
 private:
-	map<string,struct pit_map_vt*> pit_map ;
+	map<string,string> pit_map ;
 	/* data */
 };
 

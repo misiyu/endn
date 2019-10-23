@@ -8,12 +8,10 @@
 #include "table/fib.h"
 #include "table/pit.h"
 
-#define RQueue (_this->mchannel->mrqueue)
-
 using std::string ;
 using std::vector ;
 
-enum CH_TYPE { ETH , TCP } ;
+enum CH_TYPE { ETH , TCP , USC} ;
 enum FACE_STATE { ACTIVE , DEAD } ;
 
 class FList ;
@@ -25,7 +23,8 @@ public:
 	void stop();
 	void start() ;
 	static void *forward(void *param) ;
-	int send2face(vector<int> &face_list, int clen) ;
+	int send2face(int face_id, int clen, uint8_t *fhint ,
+			int fhint_l, int need2send) ;
 
 	// 功能： 往发送队列里加入长度为len的数据
 	// 参数： 
@@ -40,6 +39,7 @@ public:
 	//		len 数据长度
 	//	
 	int add2chrq(char *data , int len) ;
+	enum CH_TYPE get_ch_type() ;
 
 	enum FACE_STATE get_state(){
 		return this->m_state ;
@@ -50,6 +50,10 @@ public:
 	enum FACE_STATE m_state ;
 	string daddr ;
 private:
+	inline void process_einterest(uint16_t daddr_len, const char* name, 
+			uint16_t packet_len);
+	inline void process_edata(uint16_t daddr_len, const char* name, 
+			uint16_t packet_len);
 	/* data */
 	int face_id ;
 	pthread_t mtid ;

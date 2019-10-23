@@ -19,17 +19,17 @@ PIT::~PIT(){
 
 // param :
 // name : TLV format [T:1|L:2|V]  V ::= [T:1|L:2|v]
-void PIT::add(char *name , int face_id) {
-	this->mpit_table.add(name,face_id);
+void PIT::add(const char *name , const char *fhint ) {
+	this->mpit_table.add(name,fhint);
 }
 
 // ret:
 //		face list 
-vector<int> PIT::search(char *name ) {
+string PIT::search(const char *name ) {
 	return this->mpit_table.search(name) ;
 }
 
-void PIT::remove(char *name) {
+void PIT::remove(const char *name) {
 	this->mpit_table.remove(name) ;
 }
 

@@ -80,7 +80,7 @@ int FList::c_add_tcp_face(const char *sip , int port){
 	if(connect(sockfd , (struct sockaddr *)&server_addr , 
 				sizeof(server_addr)) == -1){
 		printf("connect to %s failed \n" , sip) ;
-		return 0 ;
+		return -1 ;
 	}
 	return s_add_tcp_face(sip , sockfd) ;
 }

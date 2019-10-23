@@ -72,11 +72,12 @@ void *Ether_RecvS::recv(void *param){
 	char buf[IP_MAXPACKET];
 	struct sockaddr_ll device ;
 	socklen_t sll_len = sizeof(struct sockaddr_ll) ;
+	int recv_c = 0 ;
 	while(1)
 	{
 		int bytes = recvfrom(fd, buf, sizeof(buf), 0 , (struct sockaddr*)&device, 
 				&sll_len);
-		printf("ether recv %d byte \n",bytes);
+		printf("%d ether recv %d byte \n" , recv_c++ , bytes);
 		//continue ;
 		uint16_t d_len = bytes-14 ;
 		int if_id = device.sll_ifindex ;
@@ -87,6 +88,10 @@ void *Ether_RecvS::recv(void *param){
 			_this->m_flist->flist[faceid]->add2chrq(buf+16 , d_len);
 		}else{
 			_this->m_flist->flist[faceid]->add2chrq(buf+14 , d_len);
+			//for (int i = 0; i < 15; i++) {
+				//printf("%x ",buf[14+i]) ;
+			//}
+			//printf("\n") ;
 		}
 	}
 	close(fd);

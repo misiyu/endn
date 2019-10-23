@@ -36,6 +36,10 @@ public:
 	// 从start开始，往后取n字节数据;
 	int get_ndata(int start , char *data ,int n );
 
+	// 
+	// 从start开始，往后写入n字节数据;
+	int insert_ndata(int start , char *data ,int n );
+
 	// 队列中加入n字节数据;
 	int push_ndata(char *data , int n);
 

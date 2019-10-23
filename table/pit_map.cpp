@@ -8,70 +8,44 @@ Pit_Map::Pit_Map(){
 }
 
 Pit_Map::~Pit_Map(){
-	map<string,struct pit_map_vt*>::iterator it = pit_map.begin() ;
-	for( ; it != pit_map.end() ; it++ ){
-		delete(it->second) ;
-	}
+	//map<string,struct pit_map_vt*>::iterator it = pit_map.begin() ;
+	//for( ; it != pit_map.end() ; it++ ){
+		//delete(it->second) ;
+	//}
 }
 
-void Pit_Map::add(char *name , int face_id){
+void Pit_Map::add(const char *name , const char* fhint){
 	uint16_t name_len = *((uint16_t*)(name+1));
 	string name_str(name,name_len+3);
-	map<string, struct pit_map_vt*>::iterator it = pit_map.find(name_str);
-	if(it == pit_map.end()){
-		// not existed
-		struct pit_map_vt *new_r = new pit_map_vt(face_id);
-		pit_map.insert(pair<string,struct pit_map_vt*>(name_str,new_r)) ;
-	}else{
-		it->second->add_faceid(face_id) ;
-	}
+	uint16_t fhint_len = *((uint16_t*)(fhint+1));
+	string fhint_str(fhint, fhint_len+3) ;
+
+	pit_map[name_str] = fhint_str ;
+
 }
 
-vector<int> Pit_Map::search(char *name) {
+string Pit_Map::search(const char *name) {
 	uint16_t name_len = *((uint16_t*)(name+1));
 	string name_str(name,name_len+3);
 	cout << "Pit_Map::search name_len= " << name_len << " " << name_str ; 
 	if(name_len <= 0 ) exit(1) ;
 
-	for (int i = 0; i < 4; i++) {
-		printf("%x ",name[i]) ;
-	}
-	printf("\n") ;
-
-	// probe ======================================================
-	//cout << "target = " << name_str << endl ;
-	//map<string,struct pit_map_vt*>::iterator it1 = pit_map.begin() ;
-	//for( ; it1 != pit_map.end() ; it1 ++ ){
-		//cout << it1->first << endl ;
-		//uint16_t n_len = *(uint16_t*)(it1->first.data()+1) + 3 ;
-		//for (int i = 0; i < n_len; i++) {
-			//printf("%x ",it1->first[i]) ;
-		//}
-		//printf("\n") ;
-	//}
-	// probe ======================================================
-
-	map<string, struct pit_map_vt*>::iterator it = pit_map.find(name_str);
+	map<string, string>::iterator it = pit_map.find(name_str);
 	if(it == pit_map.end()){
 		// not existed
-		vector<int> result ;
+		string result="" ;
 		return result ;
 	}else{
-		return it->second->face_list ;
+		return it->second ;
 	}
 	
 }
 
-void Pit_Map::remove(char *name){
+void Pit_Map::remove(const char *name){
 	uint16_t name_len = *((uint16_t*)(name+1));
 	string name_str(name,name_len+3);
 	pit_map.erase(name_str) ;
 }
 
 void Pit_Map::update(){
-	map<string,struct pit_map_vt*>::iterator it = pit_map.begin() ;
-	for( ; it != pit_map.end() ; it++ ){
-		it->second->expire_time -- ;
-		if(it->second->expire_time <= 0) pit_map.erase(it);
-	}
 }

@@ -92,12 +92,22 @@ int R_Queue::get_cdata_len(){
 // copy n Byte data from buff to data 
 // 从start开始，往后取n字节数据
 int R_Queue::get_ndata(int start , char *data ,int n ){
-	//printf("&&&&&&&&&&&& = start = %d , n = %d \n",start , n );
+	if(start >= QUEUE_SZ) start = start % QUEUE_SZ ;
 	if(start + n >= QUEUE_SZ){
 		memcpy(data,&buff[start],QUEUE_SZ-start);
 		memcpy(&data[QUEUE_SZ-start],buff,n+start-QUEUE_SZ);
 	}else{
 		memcpy(data,&buff[start],n);
+	}
+}
+
+int R_Queue::insert_ndata(int start , char *data ,int n ){
+	if(start >= QUEUE_SZ) start = start % QUEUE_SZ ;
+	if(start + n >= QUEUE_SZ){
+		memcpy(&buff[start],data,QUEUE_SZ-start);
+		memcpy(buff,&data[QUEUE_SZ-start],n+start-QUEUE_SZ);
+	}else{
+		memcpy(&buff[start],data,n);
 	}
 }
 // 队列中加入n字节数据

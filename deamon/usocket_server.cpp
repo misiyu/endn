@@ -80,7 +80,7 @@ void *USocket_Server::run(void *param){
 		vector<string> filter;
 		get_filter(filter , client_sockfd);
 		int face_id = -1 ;
-		while((face_id = _this->m_flist->s_add_tcp_face("localhost" ,
+		while((face_id = _this->m_flist->s_add_tcp_face("unix_socket" ,
 						client_sockfd)) == -1 ){
 			sleep(1) ;
 		}

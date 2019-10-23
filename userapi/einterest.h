@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string.h>
 
-#include "ename.h"
 #include "packet.h"
 using std::string ;
 
@@ -11,7 +10,8 @@ class EInterest
 {
 public:
 	// 构造一个兴趣包，应传入兴趣包名，以及源地址
-	EInterest(EName &ename , string &source_id)	;
+	EInterest(string &daddr , string &saddr)	;
+	EInterest(const uint8_t *pkt , int pkt_len)	;
 	~EInterest();
 	void setInterestLifetime();
 	void setContent(const uint8_t* content , int clen) ;
@@ -23,12 +23,12 @@ public:
 
 private:
 	/* data */
-	EName &ename ;
+	string daddr ;
 	bool has_content ;
 	char *content ;
 	uint16_t packet_len ;
 	char packet[MAX_P_SZ] ;
-	string &msource_name ;
+	string saddr ;
 	
 };
 

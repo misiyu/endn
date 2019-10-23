@@ -44,6 +44,7 @@ int send_cmd(const string cmd){
 void show_usage(){
 	cout << "Usage : ./endndc route " << endl ;
 	cout << "Usage : ./endndc face " << endl ;
+	cout << "Usage : ./endndc pit " << endl ;
 	cout << "./endndc -h for more detail help" << endl ;
 	exit(1) ;
 }
@@ -136,6 +137,17 @@ void face_cmd(int argc , char **argv){
 	send_cmd(root.toStyledString()) ;
 }
 
+void pit_cmd(int argc , char **argv){
+	Json::Value root ;
+	root["cmd1"]="pit" ;
+	if(argc == 2){
+		root["cmd2"] = "list" ;
+	}else{
+		show_usage() ;
+	}
+	send_cmd(root.toStyledString()) ;
+}
+
 int main(int argc , char **argv)
 {
 	if(argc < 2){
@@ -146,7 +158,10 @@ int main(int argc , char **argv)
 		route_cmd(argc,argv);
 	}else if(cmd == "face"){
 		face_cmd(argc,argv) ;
-	}else{
+	}else if(cmd == "pit"){
+
+	}
+	else{
 		show_usage() ;
 	}
 
