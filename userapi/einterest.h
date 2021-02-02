@@ -1,3 +1,4 @@
+// create by wgh
 #ifndef _EINTEREST_H_
 #define _EINTEREST_H_
 #include <iostream>

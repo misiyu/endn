@@ -1,3 +1,4 @@
+# create by wgh
 INC_DIR= -I.
 SRC_DIR = ./
 OBJ_DIR = ./objs

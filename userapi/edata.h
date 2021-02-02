@@ -1,3 +1,4 @@
+// create by wgh
 #ifndef _EDATA_H_
 #define _EDATA_H_
 

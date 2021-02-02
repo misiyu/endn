@@ -1,3 +1,4 @@
+// create by wgh
 #ifndef _ENDNDC_H_
 #define _ENDNDC_H_
 #include <stdio.h>

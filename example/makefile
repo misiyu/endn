@@ -1,3 +1,4 @@
+# create by wgh
 INC_DIR= -I. -I../userapi
 #SRC_DIR = ./deamon ./face ./common ./table 
 OBJ_DIR = ./objs

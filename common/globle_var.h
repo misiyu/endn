@@ -1,3 +1,4 @@
+// create by wgh
 #ifndef _GLOBLE_VAR_H_
 #define _GLOBLE_VAR_H_
 

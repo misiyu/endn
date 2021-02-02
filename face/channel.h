@@ -1,3 +1,4 @@
+// create by wgh
 #ifndef _CHANNEL_H_
 #define _CHANNEL_H_
 #include "tcp_rqueue.h"  

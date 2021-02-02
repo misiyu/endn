@@ -1,3 +1,4 @@
+// create by wgh
 #ifndef _ENDN_DEAMON_H_
 #define _ENDN_DEAMON_H_
 

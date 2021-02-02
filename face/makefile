@@ -1,3 +1,4 @@
+# create by wgh
 COM_DIR=../common
 INC_DIR= -I.. -I.
 

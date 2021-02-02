@@ -1,3 +1,4 @@
+// create by wgh
 #include <iostream>
 #include "globle_var.h"
 

@@ -1,3 +1,4 @@
+// create by wgh
 #ifndef _FACE_H_
 #define _FACE_H_
 #include <iostream>
